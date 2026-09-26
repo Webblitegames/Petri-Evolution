@@ -3,8 +3,10 @@
 .card{position:relative;overflow:hidden;border-width:1.5px}
 .card .rarity-label{font-size:9px;font-weight:900;letter-spacing:1.8px;margin-bottom:5px;opacity:.82}
 .card .tier-count{opacity:.72;font-size:.8em}
-.card.rarity-common{border-color:#68d39188;background:linear-gradient(135deg,#1c3026,#173126)}
-.card.rarity-common b,.card.rarity-common .rarity-label{color:#8ff0a9}
+.card.rarity-common{border-color:#aeb7bd88;background:linear-gradient(135deg,#292f32,#22282b)}
+.card.rarity-common b,.card.rarity-common .rarity-label{color:#d1d7db}
+.card.rarity-uncommon{border-color:#68d39199;background:linear-gradient(135deg,#1c3026,#173126)}
+.card.rarity-uncommon b,.card.rarity-uncommon .rarity-label{color:#8ff0a9}
 .card.rarity-rare{border-color:#58a6ff99;background:linear-gradient(135deg,#17283b,#14273a)}
 .card.rarity-rare b,.card.rarity-rare .rarity-label{color:#73b7ff}
 .card.rarity-epic{border-color:#b36cffaa;background:linear-gradient(135deg,#2a1d3b,#211731);box-shadow:inset 0 0 22px #9d55ff14}
