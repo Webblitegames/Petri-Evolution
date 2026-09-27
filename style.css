@@ -17,3 +17,6 @@
 /* Menu spacing */
 #startMenu>button,#settingsMenu>button,#pauseMenu>button,#mutationLibrary>button,#mutationDetail>button{margin-top:12px;min-width:min(310px,82vw)}
 #settingsMenu>button,#pauseMenu>button{margin-top:14px}
+
+/* Compact top HUD: 75% scale, anchored at the same top-left position */
+#hud{right:auto;width:calc((100vw - 24px)/.75);transform:scale(.75);transform-origin:top left}
