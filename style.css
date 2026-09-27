@@ -13,3 +13,7 @@
 .card.rarity-epic b,.card.rarity-epic .rarity-label{color:#c58aff}
 .card.rarity-legendary{border-color:#ffc857bb;background:linear-gradient(135deg,#3b2d16,#30230f);box-shadow:inset 0 0 24px #ffc85718}
 .card.rarity-legendary b,.card.rarity-legendary .rarity-label{color:#ffd66b}
+
+/* Menu spacing */
+#startMenu>button,#settingsMenu>button,#pauseMenu>button,#mutationLibrary>button,#mutationDetail>button{margin-top:12px;min-width:min(310px,82vw)}
+#settingsMenu>button,#pauseMenu>button{margin-top:14px}
