@@ -177,5 +177,6 @@ musicToggle.onclick=()=>{musicDisabled=!musicDisabled;localStorage.setItem("petr
 audioToggle.onclick=()=>{audioDisabled=!audioDisabled;localStorage.setItem("petriAudio",audioDisabled?"off":"on");if(!audioDisabled)audioOn();applyAudio();syncSettings()};controlModeBtn.onclick=()=>{const modes=["left","right","touch","floating"];controlMode=modes[(modes.indexOf(controlMode)+1)%modes.length];localStorage.setItem("petriControls",controlMode);if(joy.id!==null)endControl({pointerId:joy.id});applyControlMode()};applyControlMode();
 playBtn.onclick=async()=>{audioOn();startMenu.classList.add("hidden");pauseBtn.style.display="block";await resumeCountdown()};
 pauseBtn.onclick=()=>{if(!active)return;lockGame();pauseMenu.classList.remove("hidden");pauseBtn.style.display="none"};
+const pauseRestartBtn=$("#pauseRestartBtn");pauseRestartBtn.onclick=()=>{audioOn();location.reload()};
 resumeBtn.onclick=async()=>{pauseMenu.classList.add("hidden");pauseBtn.style.display="block";unlockGame();await resumeCountdown()};
 $("#restart").onclick=()=>location.reload();lastFrameAt=performance.now();rafId=requestAnimationFrame(loop);
