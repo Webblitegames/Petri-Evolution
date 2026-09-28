@@ -6,7 +6,7 @@ let highestDish=+(localStorage.getItem("petriHighestDish")||1),selectedDish=1,nu
 function geneUnlocked(n){return STARTER_GENES.has(n)||unlockedGenes.has(n)}
 function saveGenome(){localStorage.setItem("petriHighestDish",highestDish);localStorage.setItem("petriNucleotideMilestones",JSON.stringify([...nucleotideMilestonesClaimed]));localStorage.setItem("petriLifetimeKills",lifetimeKills);localStorage.setItem("petriLifetimeBosses",lifetimeBosses);localStorage.setItem("petriHighestLevel",highestLevel);localStorage.setItem("petriNucleotides",nucleotides);localStorage.setItem("petriGenePoints",genePoints);localStorage.setItem("petriUnlockedGenes",JSON.stringify([...unlockedGenes]));localStorage.setItem("petriSuppressedGenes",JSON.stringify([...suppressedGenes]));localStorage.setItem("petriDiscoveredTiers",JSON.stringify([...discoveredTiers]))}
 function awardGenePoints(n,why){if(n<=0)return;genePoints+=n;saveGenome();announce("+"+n+" GENE POINT"+(n===1?"":"S"),why)}
-function awardNucleotides(n,x=p.x,y=p.y){n=Math.max(0,Math.floor(n));if(!n)return;nucleotides+=n;saveGenome();nucleotideNumbers.push({x:x+rnd(-5,5),y:y-10,v:-25-rnd(0,7),life:.72,max:.72,n});if(nucleotideNumbers.length>45)nucleotideNumbers.splice(0,nucleotideNumbers.length-45);syncCurrencyCounters()}
+function awardNucleotides(n,x=p.x,y=p.y){n=Math.max(0,Math.floor(n));if(!n)return;nucleotides+=n;saveGenome();syncCurrencyCounters()}
 function syncCurrencyCounters(){document.querySelectorAll("[data-nucleotide-count]").forEach(e=>e.textContent=nucleotides);document.querySelectorAll("[data-gene-count]").forEach(e=>e.textContent=genePoints)}
 
 const nucleotideMilestones=[
