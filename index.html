@@ -37,12 +37,23 @@
 #startMenu.main-hub{padding-left:0!important;padding-right:0!important}
 #startMenu .hub-top,#startMenu .hub-wallet,#startMenu .hub-body{width:min(470px,calc(100vw - 28px))}
 #startMenu .hub-tabs{width:100vw!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important}
+</style><style>
+.dish-selector{width:min(440px,94vw);display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:8px;align-items:center}
+.dish-card{min-height:245px;border:1px solid rgba(143,255,220,.28);border-radius:22px;background:rgba(2,16,16,.56);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;box-sizing:border-box}.dish-card>small{font-size:9px;letter-spacing:2px;opacity:.55;margin-bottom:9px}.dish-card h2{margin:10px 0 3px!important}.dish-card p{margin:0!important;text-align:center}.dish-status{margin-top:10px;padding:5px 10px;border-radius:999px;border:1px solid rgba(143,255,220,.32);font-size:9px;font-weight:900;letter-spacing:1.3px;color:#8fffdc}
+.dish-arrow{width:46px!important;height:70px!important;padding:0!important;margin:0!important;border-radius:16px!important;font-size:42px!important;line-height:1!important;background:rgba(4,28,26,.62)!important}.dish-arrow:disabled{opacity:.22!important}
 </style></head><body><main id="game"><canvas id="c"></canvas><button id="pauseBtn" aria-label="Pause" style="position:fixed;z-index:9;left:5px;top:154px;width:34px;height:42px;border:0;background:transparent;padding:4px;display:none;filter:drop-shadow(0 2px 4px rgba(0,45,130,.5))"><span style="display:inline-block;width:8px;height:30px;border-radius:4px;background:linear-gradient(90deg,#1774db,#71c5ff 42%,#2788ed 72%,#0b54ba);box-shadow:inset 1px 1px 2px rgba(255,255,255,.65)"></span><span style="display:inline-block;width:8px;height:30px;margin-left:4px;border-radius:4px;background:linear-gradient(90deg,#1774db,#71c5ff 42%,#2788ed 72%,#0b54ba);box-shadow:inset 1px 1px 2px rgba(255,255,255,.65)"></span></button><section id="hud"><div class="top"><b>PETRI EVOLUTION</b><span style="display:flex;gap:8px;align-items:center"><span title="Nucleotides">🧬 <span data-nucleotide-count>0</span></span><span id="level">LV 1</span></span></div><div class="bar hp"><i id="hp"></i><b id="hpText">HP 100/100</b></div><div class="bar xp"><i id="xp"></i><b id="xpText">BIOMASS 0/8</b></div><div id="buildRow" style="display:flex;align-items:center;gap:4px;margin-top:6px;min-height:34px;max-width:calc(100vw - 28px);overflow-x:auto;overflow-y:hidden;padding:2px 1px 4px;scrollbar-width:none"></div></section><div id="controlZone"><div id="joystick"><div id="stick"></div></div><span>MOVE</span></div><div id="hint">LEFT THUMB TO SWIM</div><section id="mutations" class="overlay hidden"><h2>Mutation Available</h2><p>Choose one adaptation.</p><div id="cards"></div></section>
 <section id="quickStartMenu" class="overlay hidden" style="z-index:35"><h1>PETRI EVOLUTION</h1><p>Ready to return to the dish?</p><button id="quickPlayBtn">PLAY</button><button id="quickMainMenuBtn">MAIN MENU</button><button id="quickSettingsBtn">SETTINGS</button></section>
 <section id="startMenu" class="overlay main-hub" style="z-index:30">
 <div class="hub-top"><div><h1>PETRI EVOLUTION</h1><p>Evolve. Adapt. Survive.</p></div><button id="settingsBtn" class="hub-settings">⚙</button></div>
 <div class="hub-wallet"><span>🧬 <b data-nucleotide-count>0</b></span><span>◈ <b data-gene-count>0</b> GP</span></div>
-<div class="hub-body"><div class="hub-cell">◉</div><h2>READY TO EVOLVE</h2><p>Enter the dish and build a new organism.</p><button id="playBtn" class="hub-play">PLAY</button></div>
+<div class="hub-body">
+<div class="dish-selector">
+<button id="dishPrev" class="dish-arrow" aria-label="Previous dish">‹</button>
+<div class="dish-card"><small>SELECTED DISH</small><div class="hub-cell">◉</div><h2 id="dishName">DISH 1</h2><p id="dishDesc">Clean laboratory dish · Nucleotides ×1.00</p><div id="dishStatus" class="dish-status">AVAILABLE</div></div>
+<button id="dishNext" class="dish-arrow" aria-label="Next dish">›</button>
+</div>
+<button id="playBtn" class="hub-play">PLAY DISH 1</button>
+</div>
 <div class="hub-tabs"><button class="hub-tab active" data-hub="home"><span>◉</span><small>HOME</small></button><button class="hub-tab" id="nucleotideUpgradesBtn"><span>🧬</span><small>UPGRADES</small></button><button class="hub-tab" id="genomeLabBtn"><span>◇</span><small>GENOME</small></button><button class="hub-tab" id="milestonesBtn"><span>⌁</span><small>MILESTONES</small></button><button class="hub-tab disabled"><span>▣</span><small>CARDS</small></button></div>
 </section>
 <section id="nucleotideUpgradesMenu" class="overlay hidden" style="z-index:31"><div class="mile-head"><div><h2>NUCLEOTIDE UPGRADES</h2><p>Permanent base-organism improvements.</p></div><div class="mile-wallet">🧬 <span data-nucleotide-count>0</span></div></div><div class="upgrade-placeholder"><div class="hub-cell small">🧬</div><h3>UPGRADE LAB</h3><p>Your permanent stat upgrade branches will live here.</p><div class="placeholder-grid"><div>?</div><div>?</div><div>?</div><div>?</div></div></div><button id="nucleotideUpgradesBack">BACK TO HOME</button></section>
@@ -60,4 +71,4 @@ addEventListener("error",e=>window.__petriBoot.show("ERROR: "+(e.message||"unkno
 addEventListener("unhandledrejection",e=>window.__petriBoot.show("PROMISE: "+String(e.reason)));
 setTimeout(()=>{if(window.__petriBoot.frames<2)window.__petriBoot.show("STARTUP STALL: game frames="+window.__petriBoot.frames+" ready="+document.readyState)},1800);
 })();
-</script>\n<script src="game.js?v=20260928-01"></script></body></html>
+</script>\n<script src="game.js?v=20260928-02"></script></body></html>
