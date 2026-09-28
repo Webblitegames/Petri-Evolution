@@ -23,6 +23,15 @@
 .hub-tab small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center}
 #genomeLabMenu>div,#devToolsMenu>div,#mutationLibraryList,#colonyCellsList{box-sizing:border-box;max-width:92vw}
 @media(max-width:390px){.hub-tab small{font-size:7px!important;letter-spacing:0!important}.hub-tab span{font-size:19px!important}.hub-tabs{gap:0!important}.overlay{gap:8px}}
+</style><style>
+/* Static microscopic artwork behind every non-game menu. */
+#quickStartMenu,#startMenu,#settingsMenu,#genomeLabMenu,#milestonesMenu,#nucleotideUpgradesMenu{
+ background-image:linear-gradient(rgba(1,10,11,.52),rgba(1,10,11,.68)),url("Petribackground.jpg.PNG")!important;
+ background-size:cover!important;
+ background-position:center center!important;
+ background-repeat:no-repeat!important;
+}
+#startMenu.main-hub{background-image:linear-gradient(rgba(1,10,11,.42),rgba(1,10,11,.66)),url("Petribackground.jpg.PNG")!important}
 </style></head><body><main id="game"><canvas id="c"></canvas><button id="pauseBtn" aria-label="Pause" style="position:fixed;z-index:9;left:5px;top:154px;width:34px;height:42px;border:0;background:transparent;padding:4px;display:none;filter:drop-shadow(0 2px 4px rgba(0,45,130,.5))"><span style="display:inline-block;width:8px;height:30px;border-radius:4px;background:linear-gradient(90deg,#1774db,#71c5ff 42%,#2788ed 72%,#0b54ba);box-shadow:inset 1px 1px 2px rgba(255,255,255,.65)"></span><span style="display:inline-block;width:8px;height:30px;margin-left:4px;border-radius:4px;background:linear-gradient(90deg,#1774db,#71c5ff 42%,#2788ed 72%,#0b54ba);box-shadow:inset 1px 1px 2px rgba(255,255,255,.65)"></span></button><section id="hud"><div class="top"><b>PETRI EVOLUTION</b><span style="display:flex;gap:8px;align-items:center"><span title="Nucleotides">🧬 <span data-nucleotide-count>0</span></span><span id="level">LV 1</span></span></div><div class="bar hp"><i id="hp"></i><b id="hpText">HP 100/100</b></div><div class="bar xp"><i id="xp"></i><b id="xpText">BIOMASS 0/8</b></div><div id="buildRow" style="display:flex;align-items:center;gap:4px;margin-top:6px;min-height:34px;max-width:calc(100vw - 28px);overflow-x:auto;overflow-y:hidden;padding:2px 1px 4px;scrollbar-width:none"></div></section><div id="controlZone"><div id="joystick"><div id="stick"></div></div><span>MOVE</span></div><div id="hint">LEFT THUMB TO SWIM</div><section id="mutations" class="overlay hidden"><h2>Mutation Available</h2><p>Choose one adaptation.</p><div id="cards"></div></section>
 <section id="quickStartMenu" class="overlay" style="z-index:35"><h1>PETRI EVOLUTION</h1><p>Ready to return to the dish?</p><button id="quickPlayBtn">PLAY</button><button id="quickMainMenuBtn">MAIN MENU</button><button id="quickSettingsBtn">SETTINGS</button></section>
 <section id="startMenu" class="overlay main-hub hidden" style="z-index:30">
