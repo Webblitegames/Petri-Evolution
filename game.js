@@ -69,7 +69,7 @@ addEventListener("pointermove",e=>{if(!joy.on||e.pointerId!==joy.id)return;if(co
 
 const mutations=[
 ["Spiked Membrane","Contact damage +8. Your membrane grows visible spikes.",()=>{p.damage+=8;p.spikes++},()=>p.spikes,3,"common"],
-["Flagella","Swim 22% faster. Grow a visible swimming tail.",()=>{p.speed*=1.22;p.flagella++},()=>p.flagella,3,"common"],
+["Flagella","Swim 5% faster each tier, compounded from your current speed. Grow a visible swimming tail.",()=>{p.speed*=1.05;p.flagella++},()=>p.flagella,3,"common"],
 ["Thick Membrane","+35 maximum HP and heal 35. Your outer membrane visibly thickens.",()=>{p.max+=35;p.hp=Math.min(p.max,p.hp+35);p.membrane++},()=>p.membrane,3,"common"],
 ["Regeneration","Recover 2 HP every second. Regenerative nodules appear inside your cell.",()=>p.regen+=2,()=>Math.round(p.regen/2),3,"common"],
 ["Dense Cytoplasm","Reduce collision damage by 20%. Your cytoplasm becomes darker and denser.",()=>p.armor=Math.min(.6,p.armor+.2),()=>Math.round(p.armor/.2),3,"common"],
