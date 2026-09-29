@@ -1,4 +1,4 @@
-# Petri Evolution
+# DishBorn
 
 Mobile-first browser roguelite prototype.
 
