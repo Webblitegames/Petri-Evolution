@@ -230,6 +230,8 @@ for(let i=foes.length-1;i>=0;i--){
  if(e.poison>0){e.poison-=dt;e.hp-=Number.isFinite(e.poisonDmg)?e.poisonDmg*dt:0;if(e.hp<=0){killFoe(e,"remote");continue}}
  const dx=p.x-e.x,dy=p.y-e.y,d=Math.hypot(dx,dy)||1;
  let ux=dx/d,uy=dy/d;
+ /* Euglena pursue on a gentle swimming arc instead of pointing the anterior directly at the player. */
+ if(e.species==="euglena"){const side=Math.sin((e.phase||0)*3.17)>=0?1:-1,arc=.42*Math.sin((e.locomotion||0)*.72+(e.phase||0));const tx=-uy,ty=ux;ux+=tx*arc*side;uy+=ty*arc*side;const um=Math.hypot(ux,uy)||1;ux/=um;uy/=um}
  e.locomotion=(Number.isFinite(e.locomotion)?e.locomotion:0)+dt*(e.species==="paramecium"?5.2:e.species==="euglena"?4.4:e.species==="stentor"?2.5:e.species==="didinium"?5.8:e.boss?2.2:4.0);
  let gait=1;
  if(e.species==="paramecium")gait=.96+.06*Math.sin(e.locomotion);
@@ -241,7 +243,7 @@ for(let i=foes.length-1;i>=0;i--){
  let speed=e.speed*(e.slow>0?.55:1)*gait;
  if(!Number.isFinite(speed))speed=0;
  const evx=ux*speed,evy=uy*speed;
- e.x+=evx*dt;e.y+=evy*dt;e.mvx=evx;e.mvy=evy;const moveAngle=Math.atan2(evy,evx);if(!Number.isFinite(e.bodyAngle))e.bodyAngle=moveAngle;else{const turn=Math.atan2(Math.sin(moveAngle-e.bodyAngle),Math.cos(moveAngle-e.bodyAngle));e.bodyAngle+=turn*Math.min(1,dt*5)}e.angle=e.bodyAngle;e.cd=(Number.isFinite(e.cd)?e.cd:0)-dt;
+ e.x+=evx*dt;e.y+=evy*dt;e.mvx=evx;e.mvy=evy;const moveAngle=Math.atan2(evy,evx);if(!Number.isFinite(e.bodyAngle))e.bodyAngle=moveAngle;else{const turn=Math.atan2(Math.sin(moveAngle-e.bodyAngle),Math.cos(moveAngle-e.bodyAngle)),turnRate=e.species==="euglena"?2.15:5;e.bodyAngle+=turn*Math.min(1,dt*turnRate)}e.angle=e.bodyAngle;e.cd=(Number.isFinite(e.cd)?e.cd:0)-dt;
  if(e.boss){bossAttack(e,dt,d);if(e.charge<=0)e.speed=24+(e.bossRank||1)*2.5}
  if(d<p.r+e.r&&e.cd<=0){
   e.hp-=p.damage;
