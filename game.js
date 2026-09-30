@@ -7,7 +7,9 @@ let nucleotideUpgradeLevels=JSON.parse(localStorage.getItem("petriNucleotideUpgr
 function geneUnlocked(n){return STARTER_GENES.has(n)||unlockedGenes.has(n)}
 function saveGenome(){localStorage.setItem("petriNucleotideUpgrades",JSON.stringify(nucleotideUpgradeLevels));localStorage.setItem("petriHighestDish",highestDish);localStorage.setItem("petriNucleotideMilestones",JSON.stringify([...nucleotideMilestonesClaimed]));localStorage.setItem("petriLifetimeKills",lifetimeKills);localStorage.setItem("petriLifetimeBosses",lifetimeBosses);localStorage.setItem("petriHighestLevel",highestLevel);localStorage.setItem("petriNucleotides",nucleotides);localStorage.setItem("petriGenePoints",genePoints);localStorage.setItem("petriUnlockedGenes",JSON.stringify([...unlockedGenes]));localStorage.setItem("petriSuppressedGenes",JSON.stringify([...suppressedGenes]));localStorage.setItem("petriDiscoveredTiers",JSON.stringify([...discoveredTiers]))}
 function awardGenePoints(n,why){if(n<=0)return;genePoints+=n;saveGenome();announce("+"+n+" GENE POINT"+(n===1?"":"S"),why)}
-function awardNucleotides(n,x=p.x,y=p.y){n=Math.max(0,Math.floor(n));if(!n)return;nucleotides+=n;saveGenome();syncCurrencyCounters()}
+function nucleotideIncomeMult(){return 1+nucleotideLevel("nucleotideAssimilation")*.01}
+function dishNucleotideMult(){return selectedDish===1?1:selectedDish===2?1.8:1}
+function awardNucleotides(n,x=p.x,y=p.y,applyMultipliers=true){if(applyMultipliers)n*=dishNucleotideMult()*nucleotideIncomeMult();n=Math.max(0,Math.floor(n));if(!n)return;nucleotides+=n;saveGenome();syncCurrencyCounters()}
 function syncCurrencyCounters(){document.querySelectorAll("[data-nucleotide-count]").forEach(e=>e.textContent=nucleotides);document.querySelectorAll("[data-gene-count]").forEach(e=>e.textContent=genePoints)}
 const mutationCategories={
 "Spiked Membrane":["contact","direct"],"Flagella":["mobility"],"Thick Membrane":["defense"],"Regeneration":["recovery"],"Dense Cytoplasm":["defense"],"Predatory Growth":["contact","predation"],"Acid Trail":["dot","secretion","aoe"],"Pseudopod Lash":["melee","tendril","direct"],
@@ -18,26 +20,26 @@ function mutationHasCategory(name,tag){return(mutationCategories[name]||[]).incl
 function mutationCategoryList(name){return mutationCategories[name]||[]}
 const nucleotideUpgradeDefs={
  attack:[
- {id:"contact",name:"Predatory Force",desc:"+1 base contact damage per level.",max:150,base:8,growth:1.055},
- {id:"lash",name:"Pseudopod Conditioning",desc:"+1 base Pseudopod Lash damage every 2 levels.",max:100,base:10,growth:1.065},
- {id:"projectileDamage",name:"Projectile Potency",desc:"+1.5% direct projectile damage per level. Affects Spike Launcher and Cytoplasmic Shards; Explosive Vacuole blast damage is AOE.",max:100,base:14,growth:1.072},
- {id:"projectileSpeed",name:"Projectile Propulsion",desc:"+0.75% projectile travel speed per level.",max:120,base:9,growth:1.055},
- {id:"projectileReplication",name:"Projectile Replication",desc:"+2% chance per level for each projectile attack cycle to produce one additional projectile. Max 60%.",max:30,base:45,growth:1.19},
- {id:"aoeDamage",name:"Area Cytolysis",desc:"+1.5% AOE damage per level.",max:100,base:16,growth:1.075},
- {id:"aoeRadius",name:"Area Expansion",desc:"+0.5% AOE radius per level.",max:100,base:12,growth:1.065}
+ {id:"contact",name:"Predatory Force",desc:"+1 base contact damage per level.",max:150,base:8,growth:1.07},
+ {id:"lash",name:"Pseudopod Conditioning",desc:"+1 base Pseudopod Lash damage every 2 levels.",max:100,base:10,growth:1.075},
+ {id:"projectileDamage",name:"Projectile Potency",desc:"+1.5% direct projectile damage per level. Affects Spike Launcher and Cytoplasmic Shards; Explosive Vacuole blast damage is AOE.",max:100,base:14,growth:1.08},
+ {id:"projectileSpeed",name:"Projectile Propulsion",desc:"+0.75% projectile travel speed per level.",max:120,base:9,growth:1.07},
+ {id:"projectileReplication",name:"Projectile Replication",desc:"+2% chance per level for each projectile attack cycle to produce one additional projectile. Max 60%.",max:30,base:45,growth:1.145},
+ {id:"aoeDamage",name:"Area Cytolysis",desc:"+1.5% AOE damage per level.",max:100,base:16,growth:1.08},
+ {id:"aoeRadius",name:"Area Expansion",desc:"+0.5% AOE radius per level.",max:100,base:12,growth:1.0855}
  ],
  defense:[
  {id:"vitality",name:"Membrane Vitality",desc:"+2 starting maximum HP per level.",max:150,base:8,growth:1.055},
- {id:"recovery",name:"Cellular Recovery",desc:"+0.03 HP/sec base regeneration per level.",max:120,base:10,growth:1.06}
+ {id:"recovery",name:"Cellular Recovery",desc:"+0.03 HP/sec base regeneration per level.",max:120,base:10,growth:1.075}
  ],
  utility:[
- {id:"motility",name:"Base Motility",desc:"+0.3% starting movement speed per level.",max:100,base:9,growth:1.06},
- {id:"magnet",name:"Biomass Sensitivity",desc:"+1 biomass attraction radius per level.",max:120,base:6,growth:1.05},
+ {id:"motility",name:"Base Motility",desc:"+0.3% starting movement speed per level.",max:100,base:9,growth:1.08},
+ {id:"magnet",name:"Biomass Sensitivity",desc:"+1 biomass attraction radius per level.",max:120,base:6,growth:1.065},
  {id:"metabolic",name:"Efficient Metabolism",desc:"+0.25% biomass XP value per level.",max:100,base:12,growth:1.07}
  ],
  artifacts:[
- {id:"clonehp",name:"Colony Genome",desc:"+1 starting clone max HP per level.",max:120,base:12,growth:1.065},
- {id:"revival",name:"Mitosis Memory",desc:"-0.1 sec clone revival time per level, to a 20 sec floor.",max:100,base:16,growth:1.075}
+ {id:"clonehp",name:"Colony Genome",desc:"+1 starting clone max HP per level.",max:120,base:12,growth:1.075},
+ {id:"revival",name:"Mitosis Memory",desc:"-0.1 sec clone revival time per level, to a 20 sec floor.",max:100,base:16,growth:1.085}
  ]
 };
 function nucleotideUpgradeCost(d,lv){return d.costs?d.costs[lv]:Math.ceil(d.base*Math.pow(d.growth,lv))}
@@ -48,7 +50,7 @@ function aoeRadiusMult(){return 1+nucleotideLevel("aoeRadius")*.005}
 function projectileReplicationChance(){return Math.min(.60,nucleotideLevel("projectileReplication")*.02)}
 function projectileReplicates(){return Math.random()<projectileReplicationChance()}
 function nucleotideLevel(id){return nucleotideUpgradeLevels[id]||0}
-function formatNuValue(d,lv){if(d.id==="projectileReplication")return(lv*2).toFixed(0)+"%";if(d.id==="projectileDamage"||d.id==="aoeDamage")return"+"+(lv*1.5).toFixed(1)+"%";if(d.id==="projectileSpeed")return"+"+(lv*.75).toFixed(2)+"%";if(d.id==="aoeRadius")return"+"+(lv*.5).toFixed(1)+"%";if(d.id==="motility")return"+"+(lv*.3).toFixed(1)+"%";if(d.id==="metabolic")return"+"+(lv*.25).toFixed(2)+"%";if(d.id==="recovery")return"+"+(lv*.03).toFixed(2)+"/s";if(d.id==="revival")return Math.max(20,30-lv*.1).toFixed(1)+"s";return "LV "+lv}
+function formatNuValue(d,lv){if(d.id==="projectileReplication")return(lv*2).toFixed(0)+"%";if(d.id==="projectileDamage"||d.id==="aoeDamage")return"+"+(lv*1.5).toFixed(1)+"%";if(d.id==="projectileSpeed")return"+"+(lv*.75).toFixed(2)+"%";if(d.id==="aoeRadius")return"+"+(lv*.5).toFixed(1)+"%";if(d.id==="motility")return"+"+(lv*.3).toFixed(1)+"%";if(d.id==="metabolic")return"+"+(lv*.25).toFixed(2)+"%";if(d.id==="nucleotideAssimilation")return"x"+(1+lv*.01).toFixed(2);if(d.id==="recovery")return"+"+(lv*.03).toFixed(2)+"/s";if(d.id==="revival")return Math.max(20,30-lv*.1).toFixed(1)+"s";return "LV "+lv}
 function renderNucleotideUpgrades(cat="attack"){const box=$("#nucleotideUpgradeGrid");if(!box)return;box.innerHTML="";const title=$("#upgradeCategoryTitle"),labels={attack:"ATTACK UPGRADES",defense:"DEFENSE UPGRADES",utility:"ADAPTATION UPGRADES",artifacts:"COLONY UPGRADES"};if(title)title.textContent=labels[cat]||"UPGRADES";const defs=nucleotideUpgradeDefs[cat]||[];for(const d of defs){const lv=nucleotideLevel(d.id),cost=lv<d.max?nucleotideUpgradeCost(d,lv):0,card=document.createElement("div");card.className="nu-upgrade-card";card.innerHTML='<div class="nu-upgrade-name">'+d.name+'<span class="nu-upgrade-level">LV '+lv+'/'+d.max+'</span></div><div class="nu-upgrade-buy"><div class="nu-upgrade-value">'+formatNuValue(d,lv)+'</div><button class="nu-upgrade-cost" '+(lv>=d.max||nucleotides<cost?"disabled":"")+'>'+(lv>=d.max?"MAX":"🧬 "+cost)+'</button></div>';const b=card.querySelector("button");if(lv<d.max)b.onclick=()=>{if(nucleotides<cost)return;nucleotides-=cost;nucleotideUpgradeLevels[d.id]=lv+1;saveGenome();syncCurrencyCounters();renderNucleotideUpgrades(cat)};box.appendChild(card)}}
 function applyPermanentUpgrades(){const hp=100+nucleotideLevel("vitality")*2;p.max=hp;p.hp=hp;p.damage=12+nucleotideLevel("contact");p.speed=150*(1+nucleotideLevel("motility")*.003);p.regen=nucleotideLevel("recovery")*.03;p.magnet=62+nucleotideLevel("magnet");p.lashDamage=10+Math.floor(nucleotideLevel("lash")/2);p.cloneHp=34+nucleotideLevel("clonehp");p.cloneReviveTime=Math.max(20,30-nucleotideLevel("revival")*.1)}
 applyPermanentUpgrades();
