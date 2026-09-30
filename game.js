@@ -9,6 +9,13 @@ function saveGenome(){localStorage.setItem("petriNucleotideUpgrades",JSON.string
 function awardGenePoints(n,why){if(n<=0)return;genePoints+=n;saveGenome();announce("+"+n+" GENE POINT"+(n===1?"":"S"),why)}
 function awardNucleotides(n,x=p.x,y=p.y){n=Math.max(0,Math.floor(n));if(!n)return;nucleotides+=n;saveGenome();syncCurrencyCounters()}
 function syncCurrencyCounters(){document.querySelectorAll("[data-nucleotide-count]").forEach(e=>e.textContent=nucleotides);document.querySelectorAll("[data-gene-count]").forEach(e=>e.textContent=genePoints)}
+const mutationCategories={
+"Spiked Membrane":["contact","direct"],"Flagella":["mobility"],"Thick Membrane":["defense"],"Regeneration":["recovery"],"Dense Cytoplasm":["defense"],"Predatory Growth":["contact","predation"],"Acid Trail":["dot","secretion","aoe"],"Pseudopod Lash":["melee","tendril","direct"],
+"Mitosis":["colony","summon"],"Clone Carapace":["colony","defense"],"Raptor Flagella":["colony","mobility"],"Clone Fangs":["colony","contact","direct"],"Symbiotic Repair":["colony","recovery"],"Brood Expansion":["colony","summon"],"Escape Response":["colony","mobility","defense"],
+"Cytoplasmic Shards":["projectile","direct"],"Explosive Vacuole":["projectile","aoe"],"Accelerated Metabolism":["metabolic","utility"],"Chemoreception":["utility"],"Reactive Membrane":["defense","mobility"],"Cilia":["mobility","defense"],"Vacuole Storage":["recovery","utility"],"Electrogenesis":["aoe","electric"],"Photosynthesis":["recovery"],"Toxin Glands":["contact","dot","chemical"],"Bioluminescence":["control","utility"],"Phagocytosis":["predation","utility"],"Dormant Cyst":["defense","recovery"],"Adaptive Immunity":["defense"],"Neurotoxin":["contact","control","chemical"],"Osmotic Burst":["aoe","control"],"Spike Launcher":["projectile","direct"],"Predatory Engulfment":["predation","recovery"],"Genome Duplication":["genome","evolution"],"Parasitic Implantation":["summon","colony"],"Cellular Overclock":["metabolic","utility"],"Amoebic Division":["defense","evolution"],"Horizontal Gene Transfer":["genome","evolution","utility"]
+};
+function mutationHasCategory(name,tag){return(mutationCategories[name]||[]).includes(tag)}
+function mutationCategoryList(name){return mutationCategories[name]||[]}
 const nucleotideUpgradeDefs={
  attack:[{id:"contact",name:"Predatory Force",desc:"+1 base contact damage per level.",max:50,base:12,growth:1.16},{id:"lash",name:"Pseudopod Conditioning",desc:"+1 base Pseudopod Lash damage every 2 levels.",max:40,base:14,growth:1.17}],
  defense:[{id:"vitality",name:"Membrane Vitality",desc:"+2 starting maximum HP per level.",max:50,base:12,growth:1.16},{id:"recovery",name:"Cellular Recovery",desc:"+0.04 HP/sec base regeneration per level.",max:50,base:15,growth:1.17}],
