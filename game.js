@@ -447,7 +447,8 @@ function devSetMutationLevel(name,target){
  else if(name==="Raptor Flagella"){const n=mutationLevel(name);p.cloneSpeed/=Math.pow(1.28,n)}
  else if(name==="Clone Fangs"){const n=mutationLevel(name);p.cloneDamage=Math.max(11,p.cloneDamage-5*n)}
  else if(name==="Symbiotic Repair"){p.cloneRegen=0}
- else if(name==="Brood Expansion"){broodLevel=0;if(p.cloneGene)p.cloneCount=1}\n else if(name==="Escape Response"){p.cloneEscape=0;clones.forEach(c=>{c.escapeDamage=0;c.escapeWindow=0;c.flee=0;c.fleeFrom=null})}
+ else if(name==="Brood Expansion"){broodLevel=0;if(p.cloneGene)p.cloneCount=1}
+ else if(name==="Escape Response"){p.cloneEscape=0;clones.forEach(c=>{c.escapeDamage=0;c.escapeWindow=0;c.flee=0;c.fleeFrom=null})}
  else if(name==="Electrogenesis"){p.electricLevel=0;rareOwned.delete("electrogenesis")}
  else if(name==="Spike Launcher"){p.spikeShooter=false}
  else {const key={ "Accelerated Metabolism":"metabolism","Chemoreception":"chemoreception","Reactive Membrane":"reactiveMembrane","Cilia":"cilia","Vacuole Storage":"vacuole","Photosynthesis":"photosynthesis","Toxin Glands":"toxin","Bioluminescence":"biolum","Phagocytosis":"phagocytosis","Dormant Cyst":"cyst","Adaptive Immunity":"adaptiveImmunity","Neurotoxin":"neurotoxin","Osmotic Burst":"osmotic","Predatory Engulfment":"predatoryEngulfment","Genome Duplication":"genomeDuplication","Parasitic Implantation":"parasite","Cellular Overclock":"overclock","Amoebic Division":"amoebicDivision","Horizontal Gene Transfer":"hgt"}[name];if(key)p[key]=0;if(name==="Chemoreception")p.magnet=62}
