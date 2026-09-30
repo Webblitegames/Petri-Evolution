@@ -449,6 +449,8 @@ function devSetMutationLevel(name,target){
  else if(name==="Symbiotic Repair"){p.cloneRegen=0}
  else if(name==="Brood Expansion"){broodLevel=0;if(p.cloneGene)p.cloneCount=1}
  else if(name==="Escape Response"){p.cloneEscape=0;clones.forEach(c=>{c.escapeDamage=0;c.escapeWindow=0;c.flee=0;c.fleeFrom=null})}
+ else if(name==="Cytoplasmic Shards"){p.cytoShards=0;p.shardCd=0;cytoShards.length=0}
+ else if(name==="Explosive Vacuole"){p.explosiveVacuole=0;p.vacuoleCd=0;vacuoleShots.length=0;vacuoleBursts.length=0}
  else if(name==="Electrogenesis"){p.electricLevel=0;rareOwned.delete("electrogenesis")}
  else if(name==="Spike Launcher"){p.spikeShooter=false}
  else {const key={ "Accelerated Metabolism":"metabolism","Chemoreception":"chemoreception","Reactive Membrane":"reactiveMembrane","Cilia":"cilia","Vacuole Storage":"vacuole","Photosynthesis":"photosynthesis","Toxin Glands":"toxin","Bioluminescence":"biolum","Phagocytosis":"phagocytosis","Dormant Cyst":"cyst","Adaptive Immunity":"adaptiveImmunity","Neurotoxin":"neurotoxin","Osmotic Burst":"osmotic","Predatory Engulfment":"predatoryEngulfment","Genome Duplication":"genomeDuplication","Parasitic Implantation":"parasite","Cellular Overclock":"overclock","Amoebic Division":"amoebicDivision","Horizontal Gene Transfer":"hgt"}[name];if(key)p[key]=0;if(name==="Chemoreception")p.magnet=62}
