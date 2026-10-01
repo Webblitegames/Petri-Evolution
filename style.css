@@ -20,3 +20,30 @@
 
 /* Compact top HUD: 75% scale, anchored at the same top-left position */
 #hud{right:auto;width:calc((100vw - 24px)/.75);transform:scale(.75);transform-origin:top left}
+
+/* v79 responsive portrait / landscape UI */
+.overlay{max-width:100vw;max-height:100dvh;overflow-y:auto;overflow-x:hidden;padding-top:max(12px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom))}
+@media (orientation:landscape){
+ #hud{top:max(6px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));width:min(500px,58vw);right:auto;transform:scale(.68);transform-origin:top left}
+ #pauseBtn{top:max(112px,calc(env(safe-area-inset-top) + 100px))!important;left:max(5px,env(safe-area-inset-left))!important}
+ #controlZone{width:150px;height:150px;bottom:max(7px,env(safe-area-inset-bottom));left:max(8px,env(safe-area-inset-left))}
+ #joystick{width:108px;height:108px;left:19px;bottom:23px}#stick{width:50px;height:50px;left:27px;top:27px}
+ .overlay{justify-content:flex-start!important;padding:max(8px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))!important;gap:6px!important}
+ .overlay h1,.overlay h2{margin:3px 0!important}.overlay p{margin:2px auto 5px!important}
+ .overlay>button:not(.hub-settings):not(.hub-tab){width:min(340px,46vw)!important;padding:8px 12px!important;margin:0 auto!important}
+ #pauseMenu{display:grid;grid-template-columns:repeat(2,minmax(180px,320px));align-content:center;justify-content:center}
+ #pauseMenu h2{grid-column:1/-1}#pauseMenu.hidden{display:none!important}
+ #settingsMenu{display:grid;grid-template-columns:repeat(2,minmax(180px,320px));align-content:center;justify-content:center}
+ #settingsMenu h2{grid-column:1/-1}#settingsMenu.hidden{display:none!important}
+ #mutationLibraryList,#colonyCellsList{width:min(760px,88vw)!important;max-height:60vh!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #devMutationPicker,#devGeneralPanel,#genomeLabList{width:min(760px,90vw)!important;max-height:62vh!important}
+ .codex-list{width:min(820px,92vw)!important;max-height:68vh!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #nucleotideUpgradeGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;padding-bottom:75px!important}
+ .main-hub .hub-body{max-height:calc(100dvh - 145px);overflow:auto}.hub-tabs{padding-bottom:max(5px,env(safe-area-inset-bottom))!important}
+ #cards{max-width:900px!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media (orientation:landscape) and (max-height:430px){
+ .overlay{font-size:12px}.overlay>button:not(.hub-settings):not(.hub-tab){padding:6px 10px!important}
+ #colonyCellsList,#mutationLibraryList{max-height:52vh!important}
+ #controlZone{transform:scale(.82);transform-origin:bottom left}
+}
