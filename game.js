@@ -42,7 +42,8 @@ const nucleotideUpgradeDefs={
  ],
  artifacts:[
  {id:"clonehp",name:"Colony Genome",desc:"+1 starting clone max HP per level.",max:120,base:12,growth:1.075},
- {id:"revival",name:"Mitosis Memory",desc:"-0.1 sec clone revival time per level, to a 20 sec floor.",max:100,base:16,growth:1.085},\n {id:"colonyCapacity",name:"Colony Capacity",desc:"+1 daughter-cell capacity per level once Mitosis is acquired. Maximum +5; total colony hard-capped at 10.",max:5,costs:[60,120,220,360,550]}
+ {id:"revival",name:"Mitosis Memory",desc:"-0.1 sec clone revival time per level, to a 20 sec floor.",max:100,base:16,growth:1.085},
+ {id:"colonyCapacity",name:"Colony Capacity",desc:"+1 daughter-cell capacity per level once Mitosis is acquired. Maximum +5; total colony hard-capped at 10.",max:5,costs:[60,120,220,360,550]}
  ]
 };
 function nucleotideUpgradeCost(d,lv){return d.costs?d.costs[lv]:Math.ceil(d.base*Math.pow(d.growth,lv))}
