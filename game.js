@@ -340,7 +340,7 @@ if(shape===1){/* Paramecium: elongated slipper/oval ciliate. */g.ellipse(o.x,o.y
 else if(shape===2){/* Amoeba: continuously changing lobose pseudopod outline. */const n=24;for(let i=0;i<=n;i++){const a=i/n*Math.PI*2,front=Math.max(0,Math.cos(a-a0))*.07,rr=o.r*(1+.10*Math.sin(a*3+t*1.5)+.045*Math.sin(a*7-t)+front);const x=o.x+Math.cos(a)*rr,y=o.y+Math.sin(a)*rr;i?g.lineTo(x,y):g.moveTo(x,y)}g.closePath()}
 else if(shape===3){g.ellipse(o.x,o.y,o.r*1.12,o.r*.9,a0,0,Math.PI*2)}
 else if(shape===4){/* Euglena: flexible spindle-shaped cell. */g.save();g.translate(o.x,o.y);g.rotate(a0);g.moveTo(o.r*1.48,0);g.bezierCurveTo(o.r*.72,-o.r*.56,-o.r*.62,-o.r*.54,-o.r*1.18,-o.r*.12);g.quadraticCurveTo(-o.r*1.3,0,-o.r*1.18,o.r*.12);g.bezierCurveTo(-o.r*.62,o.r*.54,o.r*.72,o.r*.56,o.r*1.48,0);g.restore()}
-else if(shape===5){/* Stentor swimming form: contracted pear/trumpet silhouette. */g.save();g.translate(o.x,o.y);g.rotate(a0);g.moveTo(o.r*1.15,0);g.bezierCurveTo(o.r*.55,-o.r*.9,-o.r*.75,-o.r*.62,-o.r*1.05,-o.r*.22);g.quadraticCurveTo(-o.r*1.28,0,-o.r*1.05,o.r*.22);g.bezierCurveTo(-o.r*.75,o.r*.62,o.r*.55,o.r*.9,o.r*1.15,0);g.restore()}
+else if(shape===5){/* Stentor: flexible trumpet with a wide oral rim and tapering foot. */g.save();g.translate(o.x,o.y);g.rotate(a0);const r=o.r,sw=Math.sin(t*3.1)*.055,tip=Math.sin(t*2.1)*r*.11;g.moveTo(r*1.17,-r*.82);g.bezierCurveTo(r*.62,-r*.69,r*.12,-r*.28,-r*.22,-r*.20);g.bezierCurveTo(-r*.63,-r*.14,-r*.92+tip,-r*.10,-r*1.2+tip,0);g.bezierCurveTo(-r*.89,r*.11,-r*.52,r*.16,-r*.20,r*.22);g.bezierCurveTo(r*.18,r*.31,r*.67,r*(.70+sw),r*1.17,r*.82);g.quadraticCurveTo(r*1.35,r*.05,r*1.17,-r*.82);g.closePath();g.restore()}
 else if(shape===6){/* Didinium: barrel/oval body with a projecting cytostome. */g.save();g.translate(o.x,o.y);g.rotate(a0);g.ellipse(-o.r*.08,0,o.r*1.02,o.r*.82,0,0,Math.PI*2);g.moveTo(o.r*.72,-o.r*.28);g.lineTo(o.r*1.38,0);g.lineTo(o.r*.72,o.r*.28);g.closePath();g.restore()}
 else if(shape===7){/* Rotifer: elongated microscopic animal with head corona and tapering foot. */g.save();g.translate(o.x,o.y);g.rotate(a0);g.ellipse(0,0,o.r*1.35,o.r*.58,0,0,Math.PI*2);g.moveTo(-o.r*1.15,-o.r*.22);g.lineTo(-o.r*1.72,0);g.lineTo(-o.r*1.15,o.r*.22);g.closePath();g.restore()}
 else if(shape===8){/* Tardigrade: plump segmented body; legs are drawn as appendages below. */g.save();g.translate(o.x,o.y);g.rotate(a0);g.ellipse(0,0,o.r*1.42,o.r*.72,0,0,Math.PI*2);g.restore()}
@@ -374,7 +374,25 @@ if(sp==="paramecium"){
 }
 else if(sp==="euglena"){g.strokeStyle="rgba(225,255,235,.7)";g.lineWidth=1.4;g.beginPath();g.moveTo(o.r*1.18,0);for(let j=1;j<=7;j++)g.lineTo(o.r*1.18+j*o.r*.22,Math.sin(t*12-j*.9)*o.r*.18);g.stroke();g.fillStyle="#d83a48";g.beginPath();g.arc(o.r*.72,-o.r*.17,o.r*(elite?.16:.11),0,7);g.fill();g.fillStyle=elite?"rgba(84,170,70,.62)":"rgba(98,190,82,.45)";for(let z=0;z<(elite?6:4);z++){g.beginPath();g.ellipse((-0.55+z*.35)*o.r,Math.sin(z*2)*o.r*.2,o.r*.22,o.r*.08,z*.5,0,7);g.fill()}}
 else if(sp==="amoeba"){g.fillStyle="rgba(73,17,52,.62)";g.beginPath();g.arc(o.r*.18,o.r*.06,o.r*(elite?.34:.25),0,7);g.fill();g.fillStyle=elite?"rgba(255,190,212,.65)":"rgba(255,205,218,.5)";for(const [x,y,r] of (elite?[[-.35,-.28,.13],[-.42,.22,.1],[.46,-.2,.09],[.18,.38,.08],[-.05,-.42,.07]]:[[-.35,-.28,.11],[-.42,.22,.08],[.46,-.2,.07]])){g.beginPath();g.arc(x*o.r,y*o.r,r*o.r,0,7);g.fill()}}
-else if(sp==="stentor"){g.strokeStyle="rgba(235,255,245,.6)";g.lineWidth=.8;for(let i=-5;i<=5;i++){const y=i*o.r*.09;g.beginPath();g.moveTo(o.r*.82,y);g.lineTo(o.r*(1.22+.08*Math.sin(t*10+i)),y*1.35);g.stroke()}}
+else if(sp==="stentor"){
+ const r=o.r,ph=t*3.1+(o.phase||0);
+ /* Stentor's blue-green cytoplasm, beaded macronucleus, and oral spiral. */
+ g.save();g.beginPath();g.moveTo(r*1.10,-r*.73);g.bezierCurveTo(r*.52,-r*.6,-r*.05,-r*.20,-r*.25,-r*.13);g.lineTo(-r*1.02,0);g.lineTo(-r*.25,r*.15);g.bezierCurveTo(r*.15,r*.22,r*.6,r*.6,r*1.10,r*.73);g.closePath();g.clip();
+ const cyt=g.createLinearGradient(-r,0,r,0);cyt.addColorStop(0,"rgba(31,144,157,.55)");cyt.addColorStop(.7,"rgba(33,179,183,.58)");cyt.addColorStop(1,"rgba(13,73,119,.8)");g.fillStyle=cyt;g.fillRect(-r*1.4,-r,r*3,r*2);
+ for(let i=0;i<6;i++){const x=(-.77+i*.26)*r,y=Math.sin(i*.8+ph*.4)*r*.035;g.beginPath();g.arc(x,y,r*(.085+i*.007),0,7);g.fillStyle="#6646a9";g.fill();g.strokeStyle="rgba(222,197,255,.8)";g.lineWidth=.8;g.stroke()}
+ for(let i=0;i<13;i++){const x=(-.86+i*.17)*r,y=Math.sin(i*1.7+ph)*r*.13;g.fillStyle="rgba(152,255,235,.45)";g.beginPath();g.arc(x,y,r*(.018+(i%3)*.009),0,7);g.fill()}
+ g.restore();
+ /* The mouth is an elliptical funnel at the wide end, with a circulating food current. */
+ g.save();g.translate(r*.97,0);g.scale(.34,.80);
+ g.beginPath();g.ellipse(0,0,r*.64,r*.84,0,0,7);g.fillStyle="#0a4967";g.fill();g.strokeStyle="#9defff";g.lineWidth=2.3;g.stroke();
+ g.beginPath();for(let i=0;i<=42;i++){const f=i/42,aa=f*Math.PI*5+ph*1.7,rr=r*.62*(1-f);const x=Math.cos(aa)*rr,y=Math.sin(aa)*rr;i?g.lineTo(x,y):g.moveTo(x,y)}g.strokeStyle="rgba(128,236,255,.9)";g.lineWidth=2.4;g.stroke();g.restore();
+ /* Rapidly beating cilia on the flared oral rim. */
+ g.strokeStyle="rgba(208,255,255,.87)";g.lineWidth=Math.max(.65,r*.035);
+ for(let i=0;i<25;i++){const f=i/24,y=(f*2-1)*r*.80,x=r*(1.18+.12*Math.sin(f*Math.PI));const beat=Math.sin(ph*6+i*.75);g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(x+r*(.16+beat*.09),y+r*.055,x+r*(.28+beat*.1),y+r*.08);g.stroke()}
+ /* Sparse body cilia ripple along both sides. */
+ g.strokeStyle="rgba(180,250,244,.58)";g.lineWidth=.7;
+ for(let i=0;i<12;i++){const f=i/12,x=(-.88+f*1.85)*r,w=(.12+f*f*.55)*r;for(const side of [-1,1]){const y=side*w,beat=Math.sin(ph*5+i*.95);g.beginPath();g.moveTo(x,y);g.lineTo(x-r*.045+beat*r*.055,y+side*r*.14);g.stroke()}}
+}
 else if(sp==="didinium"){g.strokeStyle="rgba(255,240,205,.58)";g.lineWidth=1.1;for(const x of [-o.r*.34,o.r*.42]){g.beginPath();g.ellipse(x,0,o.r*.12,o.r*.83,0,0,7);g.stroke()}for(let k=0;k<14;k++){const y=(-.72+k*.11)*o.r;g.beginPath();g.moveTo(-o.r*.42,y);g.lineTo(-o.r*.52,y+Math.sin(t*15+k)*2);g.stroke()}}
 else if(sp==="rotifer"){g.strokeStyle="rgba(240,255,230,.72)";g.lineWidth=1;for(const side of [-1,1]){g.beginPath();g.arc(o.r*1.18,side*o.r*.22,o.r*.3,t*5,t*5+Math.PI*1.45);g.stroke()}for(let i=0;i<12;i++){const q=i/12*Math.PI*2;g.beginPath();g.moveTo(o.r*1.18+Math.cos(q)*o.r*.28,Math.sin(q)*o.r*.34);g.lineTo(o.r*1.18+Math.cos(q+t*6)*o.r*.39,Math.sin(q+t*6)*o.r*.44);g.stroke()}}
 else if(sp==="tardigrade"){g.strokeStyle="rgba(235,220,205,.72)";g.lineWidth=3;for(let z=0;z<4;z++){const x=(-.7+z*.46)*o.r;for(const side of [-1,1]){const y=side*o.r*.58;g.beginPath();g.moveTo(x,y*.72);g.quadraticCurveTo(x-o.r*.08,y,x+Math.sin(t*4+z)*o.r*.06,y*1.2);g.stroke()}}}
@@ -514,7 +532,7 @@ function drawSpecimenGallery(){
  for(let y=0;y<2020;y+=245){g.beginPath();g.moveTo(0,y);g.lineTo(800,y);g.stroke()}
  for(const e of s.entries){
   if(Math.abs(e.x-s.camX)>W/2+250||Math.abs(e.y-s.camY)>H/2+180)continue;
-  const col=e.boss?"#a54b65":e.elite?"#84284e":"#d34f68";
+  const col=e.species==="stentor"?(e.elite?"#238b9d":"#39b5bc"):(e.boss?"#a54b65":e.elite?"#84284e":"#d34f68");
   // Animate the same visual state as a swimming enemy, without moving its position.
   const t=performance.now()*.001,phase=t*(e.boss?1.15:2.3)+e.phase;
   e.bodyAngle=Math.sin(phase*.85)*.19;
