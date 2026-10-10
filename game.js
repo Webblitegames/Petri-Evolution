@@ -532,25 +532,6 @@ function drawSpecimenGallery(){
  g.fillStyle="#effff8";g.font="bold 15px system-ui";g.textAlign="center";g.fillText("SPECIMEN CODEX · DEV",W/2,22);
  g.font="11px system-ui";g.fillText("Walk to inspect • Stationary • No damage or mutations",W/2,40);
 }
-if(devMode){
- const galleryButton=document.createElement("button");galleryButton.textContent="SPECIMEN CODEX / GALLERY";
- galleryButton.style.cssText="width:100%;margin:8px 0";
- devToolsMenu.insertBefore(galleryButton,devToolsMenu.lastElementChild);
- galleryButton.onclick=openSpecimenGallery;
- const controls=document.createElement("div");controls.id="galleryControls";controls.style.cssText="display:none;position:fixed;inset:0;z-index:25;pointer-events:none";
- controls.innerHTML='<button id="galleryExit" style="position:absolute;top:58px;left:10px;pointer-events:auto">EXIT</button><button id="galleryPhoto" style="position:absolute;top:58px;right:10px;pointer-events:auto">SAVE IMAGE</button><div id="galleryPad" style="position:absolute;bottom:35px;left:20px;width:125px;height:125px;border-radius:50%;border:2px solid #ffffff8c;background:#143c3d55;pointer-events:auto;touch-action:none;display:grid;place-items:center;color:white;font:700 12px system-ui">MOVE</div>';
- document.body.appendChild(controls);
- document.getElementById("galleryExit").onclick=closeSpecimenGallery;
- document.getElementById("galleryPhoto").onclick=()=>{drawSpecimenGallery();const a=document.createElement("a");a.download="dishborn-specimen-codex.png";a.href=C.toDataURL("image/png");a.click()};
- const pad=document.getElementById("galleryPad");
- const move=e=>{const r=pad.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),len=Math.max(1,Math.hypot(x,y)),mag=Math.min(1,len/45);specimenGallery.stickX=x/len*mag;specimenGallery.stickY=y/len*mag};
- pad.addEventListener("pointerdown",e=>{specimenGallery.touchId=e.pointerId;pad.setPointerCapture(e.pointerId);move(e)});
- pad.addEventListener("pointermove",e=>{if(e.pointerId===specimenGallery.touchId)move(e)});
- const stop=e=>{if(e.pointerId===specimenGallery.touchId){specimenGallery.touchId=null;specimenGallery.stickX=0;specimenGallery.stickY=0}};
- pad.addEventListener("pointerup",stop);pad.addEventListener("pointercancel",stop);
- addEventListener("keydown",e=>{if(specimenGallery.on){specimenGallery.keys.add(e.key);if(e.key.startsWith("Arrow"))e.preventDefault()}});
- addEventListener("keyup",e=>specimenGallery.keys.delete(e.key));
-}
 
 function loop(n){updatePerfStats(n);updateCooldownDiagnostics(n);if(window.__petriBoot){window.__petriBoot.frames++;if(window.__petriBoot.frames===3){const b=document.getElementById("bootdiag");if(b){b.style.display="none";b.textContent=""}}}lastFrameAt=performance.now();rafId=requestAnimationFrame(loop);const dt=Math.min(.033,(n-last)/1000||0);last=n;try{if(specimenGallery.on){updateSpecimenGallery(dt);drawSpecimenGallery()}else{update(dt);draw()}}catch(err){console.error("DishBorn frame error:",err);active=false;if(window.__petriBoot)window.__petriBoot.show("FRAME ERROR: "+(err&&err.message?err.message+" | ":"")+(err&&err.stack||err))}}
 function ensureLoop(){if(document.hidden)return;const now=performance.now();if(now-lastFrameAt>900){try{cancelAnimationFrame(rafId)}catch(_){}const dt=last?Math.min(.033,(now-last)/1000):.016;last=now;lastFrameAt=now;try{if(specimenGallery.on){updateSpecimenGallery(dt);drawSpecimenGallery()}else{update(dt);draw()}if(window.__petriBoot)window.__petriBoot.frames++}catch(err){console.error("Petri fallback frame error:",err);if(window.__petriBoot)window.__petriBoot.show("FALLBACK ERROR: "+(err&&err.stack||err))}rafId=requestAnimationFrame(loop)}}
@@ -609,6 +590,26 @@ function renderColonyCells(){if(colonySummary)colonySummary.innerHTML='<b>DAUGHT
 colonyCellsBtn.onclick=()=>{renderColonyCells();pauseMenu.classList.add("hidden");colonyCellsMenu.classList.remove("hidden")};
 colonyCellsBack.onclick=()=>{colonyCellsMenu.classList.add("hidden");pauseMenu.classList.remove("hidden")};
 const devToolsBtn=$("#devToolsBtn"),devToolsMenu=$("#devToolsMenu"),devToolsBack=$("#devToolsBack");let devGod=false;
+if(devMode){
+ const galleryButton=document.createElement("button");galleryButton.textContent="SPECIMEN CODEX / GALLERY";
+ galleryButton.style.cssText="width:100%;margin:8px 0";
+ devToolsMenu.insertBefore(galleryButton,devToolsMenu.lastElementChild);
+ galleryButton.onclick=openSpecimenGallery;
+ const controls=document.createElement("div");controls.id="galleryControls";controls.style.cssText="display:none;position:fixed;inset:0;z-index:25;pointer-events:none";
+ controls.innerHTML='<button id="galleryExit" style="position:absolute;top:58px;left:10px;pointer-events:auto">EXIT</button><button id="galleryPhoto" style="position:absolute;top:58px;right:10px;pointer-events:auto">SAVE IMAGE</button><div id="galleryPad" style="position:absolute;bottom:35px;left:20px;width:125px;height:125px;border-radius:50%;border:2px solid #ffffff8c;background:#143c3d55;pointer-events:auto;touch-action:none;display:grid;place-items:center;color:white;font:700 12px system-ui">MOVE</div>';
+ document.body.appendChild(controls);
+ document.getElementById("galleryExit").onclick=closeSpecimenGallery;
+ document.getElementById("galleryPhoto").onclick=()=>{drawSpecimenGallery();const a=document.createElement("a");a.download="dishborn-specimen-codex.png";a.href=C.toDataURL("image/png");a.click()};
+ const pad=document.getElementById("galleryPad");
+ const move=e=>{const r=pad.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),len=Math.max(1,Math.hypot(x,y)),mag=Math.min(1,len/45);specimenGallery.stickX=x/len*mag;specimenGallery.stickY=y/len*mag};
+ pad.addEventListener("pointerdown",e=>{specimenGallery.touchId=e.pointerId;pad.setPointerCapture(e.pointerId);move(e)});
+ pad.addEventListener("pointermove",e=>{if(e.pointerId===specimenGallery.touchId)move(e)});
+ const stop=e=>{if(e.pointerId===specimenGallery.touchId){specimenGallery.touchId=null;specimenGallery.stickX=0;specimenGallery.stickY=0}};
+ pad.addEventListener("pointerup",stop);pad.addEventListener("pointercancel",stop);
+ addEventListener("keydown",e=>{if(specimenGallery.on){specimenGallery.keys.add(e.key);if(e.key.startsWith("Arrow"))e.preventDefault()}});
+ addEventListener("keyup",e=>specimenGallery.keys.delete(e.key));
+}
+
 if(devMode)devToolsBtn.classList.remove("hidden");
 function devSetLevel(n){p.lv=n;p.need=Math.max(10,Math.ceil(10*Math.pow(1.45,Math.max(0,n-1))));p.xp=0;active=!blockingMenuOpen()&&!pauseLocks;announce("DEV JUMP","Level "+n+" test state loaded.")}
 function devSave(){const d={lv:p.lv,xp:p.xp,need:p.need,hp:p.hp,max:p.max,damage:p.damage,speed:p.speed,spikes:p.spikes,flagella:p.flagella,membrane:p.membrane,regen:p.regen,armor:p.armor,growth:p.growth,acidTrail:p.acidTrail,electricLevel:p.electricLevel,lashLevel:p.lashLevel,lashDamage:p.lashDamage,lashRange:p.lashRange,cloneGene:p.cloneGene,cloneCount:p.cloneCount,cloneDamage:p.cloneDamage,cloneSpeed:p.cloneSpeed,cloneArmor:p.cloneArmor,cloneRegen:p.cloneRegen,broodLevel,instability,adaptationTier,wave,waveClock,waveBossSpawned,dishComplete,runTime,synergies:[...synergies],synergyConsumed:[...synergyConsumed]};localStorage.setItem("petriDevState",JSON.stringify(d));announce("DEV STATE SAVED","Reload this exact build whenever needed.")}
