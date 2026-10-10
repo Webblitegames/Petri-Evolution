@@ -515,6 +515,13 @@ function drawSpecimenGallery(){
  for(const e of s.entries){
   if(Math.abs(e.x-s.camX)>W/2+250||Math.abs(e.y-s.camY)>H/2+180)continue;
   const col=e.boss?"#a54b65":e.elite?"#84284e":"#d34f68";
+  // Animate the same visual state as a swimming enemy, without moving its position.
+  const t=performance.now()*.001,phase=t*(e.boss?1.15:2.3)+e.phase;
+  e.bodyAngle=Math.sin(phase*.85)*.19;
+  e.angle=e.bodyAngle;
+  e.mvx=Math.cos(phase)*35;
+  e.mvy=Math.sin(phase)*19;
+  e.locomotion=phase;
   wetCell(e,col,e.shape);drawSpeciesDetails(e);
   const cardX=e.x-153,cardY=e.y+e.r+21;
   g.fillStyle="rgba(9,34,39,.87)";g.beginPath();g.roundRect(cardX,cardY,306,86,10);g.fill();
