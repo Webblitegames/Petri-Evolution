@@ -461,8 +461,99 @@ function renderCooldownMenu(){
  for(const o of items){const el=document.createElement("div");el.style.cssText="border:1px solid #ffffff30;border-radius:8px;padding:9px;text-align:left;background:#071e26";const t=document.createElement("b");t.textContent=o.name;const info=document.createElement("div");info.textContent="Cooldown: "+o.period.toFixed(2)+"s · Remaining: "+o.remaining.toFixed(2)+"s"+(o.condition?" · "+o.condition:"");info.style.cssText="font-size:12px;opacity:.8;margin-top:4px";el.append(t,info);list.appendChild(el)}
 }
 
-function loop(n){updatePerfStats(n);updateCooldownDiagnostics(n);if(window.__petriBoot){window.__petriBoot.frames++;if(window.__petriBoot.frames===3){const b=document.getElementById("bootdiag");if(b){b.style.display="none";b.textContent=""}}}lastFrameAt=performance.now();rafId=requestAnimationFrame(loop);const dt=Math.min(.033,(n-last)/1000||0);last=n;try{update(dt);draw()}catch(err){console.error("DishBorn frame error:",err);active=false;if(window.__petriBoot)window.__petriBoot.show("FRAME ERROR: "+(err&&err.message?err.message+" | ":"")+(err&&err.stack||err))}}
-function ensureLoop(){if(document.hidden)return;const now=performance.now();if(now-lastFrameAt>900){try{cancelAnimationFrame(rafId)}catch(_){}const dt=last?Math.min(.033,(now-last)/1000):.016;last=now;lastFrameAt=now;try{update(dt);draw();if(window.__petriBoot)window.__petriBoot.frames++}catch(err){console.error("Petri fallback frame error:",err);if(window.__petriBoot)window.__petriBoot.show("FALLBACK ERROR: "+(err&&err.stack||err))}rafId=requestAnimationFrame(loop)}}
+
+/* Dev-only walkable specimen gallery. It never modifies the live run or mutations. */
+const specimenGallery={on:false,x:0,y:0,camX:0,camY:0,keys:new Set(),stickX:0,stickY:0,touchId:null,entries:[]};
+function galleryEntries(){
+ const normal=[
+ ["amoeba","AMOEBA PROTEUS",2,"Changes shape and pursues the player."],
+ ["paramecium","PARAMECIUM",1,"Fast ciliary swimmer."],
+ ["euglena","EUGLENA",4,"Fast flagellar swimmer."],
+ ["stentor","STENTOR",5,"Slow, large-bodied ciliate."],
+ ["didinium","DIDINIUM",6,"Predatory ciliate; quick pursuit."]
+ ];
+ const bosses=[
+ ["amoeba","GIANT AMOEBA PROTEUS",2,"Wave 5 boss; giant contact threat."],
+ ["didinium","DIDINIUM BOSS",6,"Wave 10 boss; predatory ciliate."],
+ ["rotifer","ROTIFER BOSS",7,"Wave 15 boss; rotating corona."],
+ ["tardigrade","TARDIGRADE BOSS",8,"Wave 20 boss; Tun invulnerability at half HP."]
+ ];
+ const out=[];
+ for(const [species,name,shape,ability] of normal){
+  out.push({species,name,shape,ability,damage:10,elite:false,boss:false,r:19});
+  out.push({species,name:"ELITE "+name,shape,ability:"Larger, tougher, faster. "+ability,damage:14,elite:true,boss:false,r:27});
+ }
+ for(let i=0;i<bosses.length;i++){const [species,name,shape,ability]=bosses[i];out.push({species,name,shape,ability,damage:21+i*3,elite:true,boss:true,r:34})}
+ return out.map((e,i)=>({...e,x:210+(i%2)*390,y:165+Math.floor(i/2)*245,hp:100,max:100,angle:0,bodyAngle:0,phase:i*.4,adapted:null}));
+}
+function openSpecimenGallery(){
+ if(!devMode)return;
+ specimenGallery.entries=galleryEntries();specimenGallery.x=210;specimenGallery.y=42;specimenGallery.camX=210;specimenGallery.camY=110;
+ specimenGallery.on=true;specimenGallery.keys.clear();specimenGallery.stickX=0;specimenGallery.stickY=0;
+ devToolsMenu.classList.add("hidden");document.getElementById("galleryControls").style.display="block";cooldownHud.style.display="none";
+}
+function closeSpecimenGallery(){
+ specimenGallery.on=false;specimenGallery.keys.clear();specimenGallery.stickX=0;specimenGallery.stickY=0;
+ document.getElementById("galleryControls").style.display="none";devToolsMenu.classList.remove("hidden");
+}
+function updateSpecimenGallery(dt){
+ const s=specimenGallery,k=s.keys;
+ let dx=(k.has("ArrowRight")||k.has("d")?1:0)-(k.has("ArrowLeft")||k.has("a")?1:0)+s.stickX;
+ let dy=(k.has("ArrowDown")||k.has("s")?1:0)-(k.has("ArrowUp")||k.has("w")?1:0)+s.stickY;
+ const l=Math.hypot(dx,dy);if(l>1){dx/=l;dy/=l}
+ s.x=Math.max(24,Math.min(770,s.x+dx*150*dt));
+ s.y=Math.max(25,Math.min(1900,s.y+dy*150*dt));
+ s.camX+=(s.x-s.camX)*Math.min(1,dt*9);s.camY+=(s.y-s.camY)*Math.min(1,dt*9);
+}
+function drawSpecimenGallery(){
+ const s=specimenGallery;
+ g.clearRect(0,0,W,H);g.fillStyle="#b7d4c6";g.fillRect(0,0,W,H);
+ g.save();g.translate(W/2-s.camX,H/2-s.camY);
+ g.fillStyle="#a2c6b5";g.fillRect(0,0,800,2020);
+ g.strokeStyle="rgba(27,88,77,.22)";g.lineWidth=2;
+ for(let y=0;y<2020;y+=245){g.beginPath();g.moveTo(0,y);g.lineTo(800,y);g.stroke()}
+ for(const e of s.entries){
+  if(Math.abs(e.x-s.camX)>W/2+250||Math.abs(e.y-s.camY)>H/2+180)continue;
+  const col=e.boss?"#a54b65":e.elite?"#84284e":"#d34f68";
+  wetCell(e,col,e.shape);drawSpeciesDetails(e);
+  const cardX=e.x-153,cardY=e.y+e.r+21;
+  g.fillStyle="rgba(9,34,39,.87)";g.beginPath();g.roundRect(cardX,cardY,306,86,10);g.fill();
+  g.textAlign="center";g.fillStyle="#eafff9";g.font="bold 14px system-ui";g.fillText(e.name,e.x,cardY+19);
+  g.fillStyle="#8cf5dc";g.font="12px system-ui";g.fillText("CONTACT DAMAGE: "+e.damage+" (BASE)",e.x,cardY+38);
+  g.fillStyle="#e5f5ef";g.font="11px system-ui";
+  const words=e.ability.split(" ");let line="",lines=[];
+  for(const word of words){if((line+" "+word).length>43){lines.push(line);line=word}else line+=(line?" ":"")+word}if(line)lines.push(line);
+  lines.slice(0,2).forEach((t,i)=>g.fillText(t,e.x,cardY+55+i*13));
+ }
+ const avatar={x:s.x,y:s.y,r:18,phase:0,angle:0,mvx:0,mvy:0};
+ wetCell(avatar,"#55d5a0",0);
+ g.restore();
+ g.fillStyle="rgba(4,30,33,.82)";g.fillRect(0,0,W,53);
+ g.fillStyle="#effff8";g.font="bold 15px system-ui";g.textAlign="center";g.fillText("SPECIMEN CODEX · DEV",W/2,22);
+ g.font="11px system-ui";g.fillText("Walk to inspect • Stationary • No damage or mutations",W/2,40);
+}
+if(devMode){
+ const galleryButton=document.createElement("button");galleryButton.textContent="SPECIMEN CODEX / GALLERY";
+ galleryButton.style.cssText="width:100%;margin:8px 0";
+ devToolsMenu.insertBefore(galleryButton,devToolsMenu.lastElementChild);
+ galleryButton.onclick=openSpecimenGallery;
+ const controls=document.createElement("div");controls.id="galleryControls";controls.style.cssText="display:none;position:fixed;inset:0;z-index:25;pointer-events:none";
+ controls.innerHTML='<button id="galleryExit" style="position:absolute;top:58px;left:10px;pointer-events:auto">EXIT</button><button id="galleryPhoto" style="position:absolute;top:58px;right:10px;pointer-events:auto">SAVE IMAGE</button><div id="galleryPad" style="position:absolute;bottom:35px;left:20px;width:125px;height:125px;border-radius:50%;border:2px solid #ffffff8c;background:#143c3d55;pointer-events:auto;touch-action:none;display:grid;place-items:center;color:white;font:700 12px system-ui">MOVE</div>';
+ document.body.appendChild(controls);
+ document.getElementById("galleryExit").onclick=closeSpecimenGallery;
+ document.getElementById("galleryPhoto").onclick=()=>{drawSpecimenGallery();const a=document.createElement("a");a.download="dishborn-specimen-codex.png";a.href=C.toDataURL("image/png");a.click()};
+ const pad=document.getElementById("galleryPad");
+ const move=e=>{const r=pad.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),len=Math.max(1,Math.hypot(x,y)),mag=Math.min(1,len/45);specimenGallery.stickX=x/len*mag;specimenGallery.stickY=y/len*mag};
+ pad.addEventListener("pointerdown",e=>{specimenGallery.touchId=e.pointerId;pad.setPointerCapture(e.pointerId);move(e)});
+ pad.addEventListener("pointermove",e=>{if(e.pointerId===specimenGallery.touchId)move(e)});
+ const stop=e=>{if(e.pointerId===specimenGallery.touchId){specimenGallery.touchId=null;specimenGallery.stickX=0;specimenGallery.stickY=0}};
+ pad.addEventListener("pointerup",stop);pad.addEventListener("pointercancel",stop);
+ addEventListener("keydown",e=>{if(specimenGallery.on){specimenGallery.keys.add(e.key);if(e.key.startsWith("Arrow"))e.preventDefault()}});
+ addEventListener("keyup",e=>specimenGallery.keys.delete(e.key));
+}
+
+function loop(n){updatePerfStats(n);updateCooldownDiagnostics(n);if(window.__petriBoot){window.__petriBoot.frames++;if(window.__petriBoot.frames===3){const b=document.getElementById("bootdiag");if(b){b.style.display="none";b.textContent=""}}}lastFrameAt=performance.now();rafId=requestAnimationFrame(loop);const dt=Math.min(.033,(n-last)/1000||0);last=n;try{if(specimenGallery.on){updateSpecimenGallery(dt);drawSpecimenGallery()}else{update(dt);draw()}}catch(err){console.error("DishBorn frame error:",err);active=false;if(window.__petriBoot)window.__petriBoot.show("FRAME ERROR: "+(err&&err.message?err.message+" | ":"")+(err&&err.stack||err))}}
+function ensureLoop(){if(document.hidden)return;const now=performance.now();if(now-lastFrameAt>900){try{cancelAnimationFrame(rafId)}catch(_){}const dt=last?Math.min(.033,(now-last)/1000):.016;last=now;lastFrameAt=now;try{if(specimenGallery.on){updateSpecimenGallery(dt);drawSpecimenGallery()}else{update(dt);draw()}if(window.__petriBoot)window.__petriBoot.frames++}catch(err){console.error("Petri fallback frame error:",err);if(window.__petriBoot)window.__petriBoot.show("FALLBACK ERROR: "+(err&&err.stack||err))}rafId=requestAnimationFrame(loop)}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){last=0;lastFrameAt=0;ensureLoop()}});
 addEventListener("pageshow",()=>{last=0;lastFrameAt=0;ensureLoop()});
 addEventListener("focus",ensureLoop);
