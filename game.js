@@ -352,18 +352,25 @@ function wetCell(o,base,shape=0){g.save();const isP=o===p,isSpecies=!isP&&!!o.sp
 if(isSpecies){/* species-specific organelles are rendered by drawSpeciesDetails in the same local frame */}else{if(isP&&p.regen>0){const n=Math.min(7,2+Math.floor(p.regen/2));g.globalAlpha=.55;for(let i=0;i<n;i++){const aa=i/n*Math.PI*2+.5,rr=o.r*.5;circle({x:o.x+Math.cos(aa)*rr,y:o.y+Math.sin(aa)*rr,r:1.7},"#b8ffe2")}g.globalAlpha=1}g.globalAlpha=.5;g.beginPath();g.ellipse(o.x-o.r*.3,o.y-o.r*.36,o.r*.25,o.r*.12,-.45,0,7);g.fillStyle="#fff";g.fill();g.globalAlpha=.3;const vx=o.mvx||0,vy=o.mvy||0,vm=Math.hypot(vx,vy)||1,lagX=-vx/vm*Math.min(o.r*.18,vm*.025),lagY=-vy/vm*Math.min(o.r*.18,vm*.025);g.beginPath();g.arc(o.x+o.r*.18+lagX,o.y+o.r*.15+lagY,o.r*(.18+.018*Math.sin(tm*2.7)),0,7);g.fillStyle="#071b22";g.fill()}g.globalAlpha=1;g.restore()}
 function drawSpeciesDetails(o){const sp=o.species;if(!sp)return;const t=performance.now()*.001,a=Number.isFinite(o.bodyAngle)?o.bodyAngle:(o.angle||0),elite=!!o.elite&&!o.boss;g.save();g.translate(o.x,o.y);g.rotate(a);g.lineCap="round";
 if(sp==="paramecium"){
- /* Entire Paramecium, including its pigment and organelles, lives in this rotated local frame. */
- const pg=g.createRadialGradient(-o.r*.28,-o.r*.2,o.r*.08,0,0,o.r*1.35);pg.addColorStop(0,cytosolColor(o,"#ef819a"));pg.addColorStop(.38,cytosolColor(o,"#dc526f"));pg.addColorStop(1,cytosolColor(o,"#9d294d"));
- g.fillStyle=pg;g.beginPath();g.ellipse(0,0,o.r*1.42,o.r*.72,0,0,Math.PI*2);g.fill();
- g.strokeStyle="rgba(255,245,248,.72)";g.lineWidth=1.35;g.stroke();
- /* macronucleus + contractile vacuoles + food vacuoles */
- g.fillStyle="rgba(91,20,58,.72)";g.beginPath();g.ellipse(o.r*.18,o.r*.03,o.r*.34,o.r*.2,.2,0,7);g.fill();
- g.fillStyle="rgba(255,196,211,.58)";for(const [x,y,rr] of (elite?[[-.48,-.22,.14],[-.38,.25,.11],[.55,.22,.1],[.62,-.18,.09],[.02,-.3,.08],[.34,.3,.07]]:[[-.48,-.22,.12],[-.38,.25,.09],[.55,.22,.08],[.62,-.18,.07]])){g.beginPath();g.arc(x*o.r,y*o.r,rr*o.r,0,7);g.fill()}
- g.strokeStyle="rgba(255,225,235,.48)";g.lineWidth=.8;for(const x of [-.62,.58]){g.beginPath();for(let k=0;k<8;k++){const q=k/8*Math.PI*2,rr=o.r*.15+(k%2?o.r*.08:0);const xx=x*o.r+Math.cos(q)*rr,yy=Math.sin(q)*rr;k?g.lineTo(xx,yy):g.moveTo(xx,yy)}g.closePath();g.stroke()}
- /* oral groove */
- g.strokeStyle="rgba(82,25,60,.5)";g.lineWidth=1.15;g.beginPath();g.arc(o.r*.08,o.r*.04,o.r*.5,-.72,.82);g.stroke();
- /* cilia */
- g.strokeStyle="rgba(235,255,245,.6)";g.lineWidth=.7;for(let i=0;i<(elite?32:24);i++){const q=i/(elite?32:24)*Math.PI*2,x=Math.cos(q)*o.r*1.39,y=Math.sin(q)*o.r*.7,len=(elite?3.6:2.4)+1.1*Math.sin(t*13+i);g.beginPath();g.moveTo(x,y);g.lineTo(x+Math.cos(q)*len,y+Math.sin(q)*len);g.stroke()}
+ /* Draw organelles in the same rotated coordinates as the body, with strong contrast on mobile. */
+ const r=o.r;
+ g.save();g.beginPath();g.ellipse(0,0,r*1.37,r*.68,0,0,Math.PI*2);g.clip();
+ const cy=g.createRadialGradient(-r*.38,-r*.22,r*.08,0,0,r*1.5);
+ cy.addColorStop(0,cytosolColor(o,"#f19caf"));cy.addColorStop(.65,cytosolColor(o,"#dc6888"));cy.addColorStop(1,cytosolColor(o,"#a63c64"));
+ g.fillStyle=cy;g.fillRect(-r*1.5,-r,r*3,r*2);
+ /* Large, distinct macronucleus and small micronucleus. */
+ g.fillStyle="#783052";g.strokeStyle="rgba(255,228,239,.85)";g.lineWidth=1.2;
+ g.beginPath();g.ellipse(-r*.05,r*.01,r*.33,r*.29,-.24,0,Math.PI*2);g.fill();g.stroke();
+ g.fillStyle="#4c173a";g.beginPath();g.arc(r*.39,-r*.18,r*.115,0,Math.PI*2);g.fill();
+ /* Contractile vacuoles and food vacuoles, outlined so they remain visible at phone scale. */
+ for(const [x,y,size] of [[-.79,-.19,.17],[.78,.2,.17],[-.58,.34,.105],[.57,-.34,.115],[.22,.36,.09]]){
+  g.beginPath();g.arc(x*r,y*r,size*r,0,Math.PI*2);g.fillStyle="rgba(255,230,205,.82)";g.fill();g.strokeStyle="rgba(118,42,76,.9)";g.lineWidth=1;g.stroke();
+ }
+ g.strokeStyle="rgba(102,34,70,.9)";g.lineWidth=1.5;g.beginPath();g.arc(r*.12,r*.02,r*.47,-.8,.85);g.stroke();
+ g.restore();
+ g.strokeStyle="rgba(255,244,246,.88)";g.lineWidth=1.6;g.beginPath();g.ellipse(0,0,r*1.42,r*.72,0,0,Math.PI*2);g.stroke();
+ g.strokeStyle="rgba(243,255,246,.84)";g.lineWidth=.9;
+ for(let i=0;i<(elite?38:30);i++){const q=i/(elite?38:30)*Math.PI*2,x=Math.cos(q)*r*1.42,y=Math.sin(q)*r*.72,len=(elite?4:3)+1.2*Math.sin(t*13+i);g.beginPath();g.moveTo(x,y);g.lineTo(x+Math.cos(q)*len,y+Math.sin(q)*len);g.stroke()}
 }
 else if(sp==="euglena"){g.strokeStyle="rgba(225,255,235,.7)";g.lineWidth=1.4;g.beginPath();g.moveTo(o.r*1.18,0);for(let j=1;j<=7;j++)g.lineTo(o.r*1.18+j*o.r*.22,Math.sin(t*12-j*.9)*o.r*.18);g.stroke();g.fillStyle="#d83a48";g.beginPath();g.arc(o.r*.72,-o.r*.17,o.r*(elite?.16:.11),0,7);g.fill();g.fillStyle=elite?"rgba(84,170,70,.62)":"rgba(98,190,82,.45)";for(let z=0;z<(elite?6:4);z++){g.beginPath();g.ellipse((-0.55+z*.35)*o.r,Math.sin(z*2)*o.r*.2,o.r*.22,o.r*.08,z*.5,0,7);g.fill()}}
 else if(sp==="amoeba"){g.fillStyle="rgba(73,17,52,.62)";g.beginPath();g.arc(o.r*.18,o.r*.06,o.r*(elite?.34:.25),0,7);g.fill();g.fillStyle=elite?"rgba(255,190,212,.65)":"rgba(255,205,218,.5)";for(const [x,y,r] of (elite?[[-.35,-.28,.13],[-.42,.22,.1],[.46,-.2,.09],[.18,.38,.08],[-.05,-.42,.07]]:[[-.35,-.28,.11],[-.42,.22,.08],[.46,-.2,.07]])){g.beginPath();g.arc(x*o.r,y*o.r,r*o.r,0,7);g.fill()}}
