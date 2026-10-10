@@ -379,8 +379,8 @@ else if(sp==="stentor"){
  /* Stentor's blue-green cytoplasm, beaded macronucleus, and oral spiral. */
  g.save();g.beginPath();g.moveTo(r*1.10,-r*.73);g.bezierCurveTo(r*.52,-r*.6,-r*.05,-r*.20+bend,-r*.25,-r*.13+bend);g.lineTo(-r*1.02+tail,tail);g.lineTo(-r*.25,r*.15+bend);g.bezierCurveTo(r*.15,r*.22+bend,r*.6,r*.6,r*1.10,r*.73);g.closePath();g.clip();
  const cyt=g.createLinearGradient(-r,0,r,0);cyt.addColorStop(0,"rgba(31,144,157,.55)");cyt.addColorStop(.7,"rgba(33,179,183,.58)");cyt.addColorStop(1,"rgba(13,73,119,.8)");g.fillStyle=cyt;g.fillRect(-r*1.4,-r,r*3,r*2);
- for(let i=0;i<6;i++){const x=(-.77+i*.26)*r,y=Math.sin(i*.8+ph*.4)*r*.035+bend*Math.max(0,1-i/6);g.beginPath();g.arc(x,y,r*(.085+i*.007),0,7);g.fillStyle="#6646a9";g.fill();g.strokeStyle="rgba(222,197,255,.8)";g.lineWidth=.8;g.stroke()}
- for(let i=0;i<13;i++){const x=(-.86+i*.17)*r,y=Math.sin(i*1.7+ph)*r*.13;g.fillStyle="rgba(152,255,235,.45)";g.beginPath();g.arc(x,y,r*(.018+(i%3)*.009),0,7);g.fill()}
+ for(let i=0;i<6;i++){const f=i/5,x=(-.77+i*.26)*r+tail*Math.pow(1-f,2)*.48,y=Math.sin(i*.8+ph*.4)*r*.025+bend*(1-f)*.75+tail*(1-f)*.26;g.beginPath();g.arc(x,y,r*(.085+i*.007),0,7);g.fillStyle="#6646a9";g.fill();g.strokeStyle="rgba(222,197,255,.8)";g.lineWidth=.8;g.stroke()}
+ for(let i=0;i<13;i++){const f=i/12,x=(-.86+i*.17)*r+tail*Math.pow(1-f,2)*.48,y=Math.sin(i*1.7+ph)*r*.06+bend*(1-f)*.75+tail*(1-f)*.26;g.fillStyle="rgba(152,255,235,.45)";g.beginPath();g.arc(x,y,r*(.018+(i%3)*.009),0,7);g.fill()}
  g.restore();
  /* The mouth is an elliptical funnel at the wide end, with a circulating food current. */
  g.save();g.translate(r*.97,0);g.scale(.34,.80);
