@@ -389,9 +389,7 @@ else if(sp==="stentor"){
  /* Rapidly beating cilia on the flared oral rim. */
  g.strokeStyle="rgba(208,255,255,.87)";g.lineWidth=Math.max(.65,r*.035);
  for(let i=0;i<25;i++){const f=i/24,y=(f*2-1)*r*.80,x=r*(1.18+.12*Math.sin(f*Math.PI));const beat=Math.sin(ph*6+i*.75);g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(x+r*(.16+beat*.09),y+r*.055,x+r*(.28+beat*.1),y+r*.08);g.stroke()}
- /* Sparse body cilia ripple along both sides. */
- g.strokeStyle="rgba(180,250,244,.58)";g.lineWidth=.7;
- for(let i=0;i<12;i++){const f=i/12,x=(-.88+f*1.85)*r,w=(.12+f*f*.55)*r;for(const side of [-1,1]){const y=side*w,beat=Math.sin(ph*5+i*.95);g.beginPath();g.moveTo(x,y);g.lineTo(x-r*.045+beat*r*.055,y+side*r*.14);g.stroke()}}
+ /* Mouth-only cilia: no filaments on the tapered body or tail. */
 }
 else if(sp==="didinium"){g.strokeStyle="rgba(255,240,205,.58)";g.lineWidth=1.1;for(const x of [-o.r*.34,o.r*.42]){g.beginPath();g.ellipse(x,0,o.r*.12,o.r*.83,0,0,7);g.stroke()}for(let k=0;k<14;k++){const y=(-.72+k*.11)*o.r;g.beginPath();g.moveTo(-o.r*.42,y);g.lineTo(-o.r*.52,y+Math.sin(t*15+k)*2);g.stroke()}}
 else if(sp==="rotifer"){g.strokeStyle="rgba(240,255,230,.72)";g.lineWidth=1;for(const side of [-1,1]){g.beginPath();g.arc(o.r*1.18,side*o.r*.22,o.r*.3,t*5,t*5+Math.PI*1.45);g.stroke()}for(let i=0;i<12;i++){const q=i/12*Math.PI*2;g.beginPath();g.moveTo(o.r*1.18+Math.cos(q)*o.r*.28,Math.sin(q)*o.r*.34);g.lineTo(o.r*1.18+Math.cos(q+t*6)*o.r*.39,Math.sin(q+t*6)*o.r*.44);g.stroke()}}
