@@ -377,7 +377,7 @@ else if(sp==="amoeba"){g.fillStyle="rgba(73,17,52,.62)";g.beginPath();g.arc(o.r*
 else if(sp==="stentor"){
  const r=o.r,st=t+(o.phase||0),ph=st*3.1,bend=Math.sin(st*2.8-1)*r*.25,tail=Math.sin(st*2.8)*r*.34;
  /* Stentor's blue-green cytoplasm, beaded macronucleus, and oral spiral. */
- g.save();g.beginPath();const sw=Math.sin(st*3.1)*.10;g.moveTo(r*1.17,-r*.82);g.bezierCurveTo(r*.62,-r*.69,r*.12,-r*.28+bend,-r*.22,-r*.20+bend);g.bezierCurveTo(-r*.63,-r*.14+bend,-r*.92+tail,-r*.10+tail*.7,-r*1.2+tail,tail);g.bezierCurveTo(-r*.89,r*.11+tail*.7,-r*.52,r*.16+bend,-r*.20,r*.22+bend);g.bezierCurveTo(r*.18,r*.31+bend,r*.67,r*(.70+sw),r*1.17,r*.82);g.quadraticCurveTo(r*1.35,r*.05,r*1.17,-r*.82);g.closePath();g.clip();
+ g.save();g.translate(-r*.03,0);g.scale(.88,.79);g.beginPath();const sw=Math.sin(st*3.1)*.10;g.moveTo(r*1.17,-r*.82);g.bezierCurveTo(r*.62,-r*.69,r*.12,-r*.28+bend,-r*.22,-r*.20+bend);g.bezierCurveTo(-r*.63,-r*.14+bend,-r*.92+tail,-r*.10+tail*.7,-r*1.2+tail,tail);g.bezierCurveTo(-r*.89,r*.11+tail*.7,-r*.52,r*.16+bend,-r*.20,r*.22+bend);g.bezierCurveTo(r*.18,r*.31+bend,r*.67,r*(.70+sw),r*1.17,r*.82);g.quadraticCurveTo(r*1.35,r*.05,r*1.17,-r*.82);g.closePath();g.clip();g.scale(1/.88,1/.79);g.translate(r*.03,0);
  const cyt=g.createLinearGradient(-r,0,r,0);cyt.addColorStop(0,"rgba(31,144,157,.55)");cyt.addColorStop(.7,"rgba(33,179,183,.58)");cyt.addColorStop(1,"rgba(13,73,119,.8)");g.fillStyle=cyt;g.fillRect(-r*1.4,-r,r*3,r*2);
  /* Organelle positions are attached to a flexible body centerline, not a rigid row. */
  const centerAt=f=>{
