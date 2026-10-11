@@ -350,12 +350,21 @@ function cytosolFade(o){if(o===p||!o||!Number.isFinite(o.max)||o.max<=0)return 0
 function cytosolColor(o,c){return cytosolFade(o)>0?mixHex(c,"#858b8b",cytosolFade(o)):c}
 function wetCell(o,base,shape=0){g.save();const isP=o===p,isSpecies=!isP&&!!o.species;if(isP&&p.acidTrail)base=p.acidTrail>=3?"#58d46f":p.acidTrail===2?"#55d982":"#55d5a0";const membraneBase=base,cytoBase=isSpecies?cytosolColor(o,base):base;base=cytoBase;const tm=performance.now()*.001+(o.phase||0),breath=1+Math.sin(tm*2.15)*.018,wobble=Math.sin(tm*1.37)*.012,ba=Number.isFinite(o.bodyAngle)?o.bodyAngle:(o.angle||0);g.translate(o.x,o.y);g.rotate(wobble);g.scale(breath,2-breath);g.translate(-o.x,-o.y);g.shadowColor=membraneBase;g.shadowBlur=9;cellPath(o,shape);const grad=isSpecies?g.createRadialGradient(o.x,o.y,o.r*.08,o.x,o.y,o.r*1.55):g.createRadialGradient(o.x-o.r*.38,o.y-o.r*.42,o.r*.08,o.x,o.y,o.r*1.35);grad.addColorStop(0,isSpecies?base:"rgba(255,255,255,.92)");grad.addColorStop(.18,base);grad.addColorStop(.72,base);grad.addColorStop(1,isP&&p.armor>0?"rgba(5,23,19,.98)":"rgba(12,28,30,.9)");g.fillStyle=grad;g.fill();g.shadowBlur=0;cellPath(o,shape);g.strokeStyle="rgba(255,255,255,.58)";g.lineWidth=isP?1.7+Math.min(4,p.membrane*1.15):1.7;g.stroke();
 if(isSpecies){/* species-specific organelles are rendered by drawSpeciesDetails in the same local frame */}else{if(isP&&p.regen>0){const n=Math.min(7,2+Math.floor(p.regen/2));g.globalAlpha=.55;for(let i=0;i<n;i++){const aa=i/n*Math.PI*2+.5,rr=o.r*.5;circle({x:o.x+Math.cos(aa)*rr,y:o.y+Math.sin(aa)*rr,r:1.7},"#b8ffe2")}g.globalAlpha=1}g.globalAlpha=.5;g.beginPath();g.ellipse(o.x-o.r*.3,o.y-o.r*.36,o.r*.25,o.r*.12,-.45,0,7);g.fillStyle="#fff";g.fill();g.globalAlpha=.3;const vx=o.mvx||0,vy=o.mvy||0,vm=Math.hypot(vx,vy)||1,lagX=-vx/vm*Math.min(o.r*.18,vm*.025),lagY=-vy/vm*Math.min(o.r*.18,vm*.025);g.beginPath();g.arc(o.x+o.r*.18+lagX,o.y+o.r*.15+lagY,o.r*(.18+.018*Math.sin(tm*2.7)),0,7);g.fillStyle="#071b22";g.fill()}g.globalAlpha=1;g.restore()}
-function clipSpeciesInterior(o,shape,pad=.92){g.translate(-o.x,-o.y);g.save();g.translate(o.x,o.y);g.scale(pad,pad);g.translate(-o.x,-o.y);cellPath(o,shape);g.restore();g.translate(o.x,o.y);g.clip();}
+function clipSpeciesInterior(o,shape,pad=.83){
+ // Detail coordinates are already translated and rotated; build the inset in local space.
+ // Rotating a second time here previously let organelles cross the membrane.
+ const r=o.r,t=performance.now()*.001+(o.phase||0);
+ g.beginPath();
+ if(shape===4){g.moveTo(r*1.48*pad,0);g.bezierCurveTo(r*.72*pad,-r*.56*pad,-r*.62*pad,-r*.54*pad,-r*1.18*pad,-r*.12*pad);g.quadraticCurveTo(-r*1.3*pad,0,-r*1.18*pad,r*.12*pad);g.bezierCurveTo(-r*.62*pad,r*.54*pad,r*.72*pad,r*.56*pad,r*1.48*pad,0)}
+ else if(shape===2){for(let i=0;i<=32;i++){const a=i/32*Math.PI*2,rr=r*pad*(1+.10*Math.sin(a*3+t*1.5)+.045*Math.sin(a*7-t)+Math.max(0,Math.cos(a))*.07);i?g.lineTo(Math.cos(a)*rr,Math.sin(a)*rr):g.moveTo(Math.cos(a)*rr,Math.sin(a)*rr)}}
+ else {g.ellipse(0,0,r*pad,r*pad,0,0,Math.PI*2)}
+ g.closePath();g.clip();
+}
 function drawSpeciesDetails(o){const sp=o.species;if(!sp)return;const t=performance.now()*.001,a=Number.isFinite(o.bodyAngle)?o.bodyAngle:(o.angle||0),elite=!!o.elite&&!o.boss;g.save();g.translate(o.x,o.y);const tm=t+(o.phase||0),breath=1+Math.sin(tm*2.15)*.018,wobble=Math.sin(tm*1.37)*.012;g.rotate(wobble);g.scale(breath,2-breath);g.rotate(a);g.lineCap="round";
 if(sp==="paramecium"){
  /* Draw organelles in the same rotated coordinates as the body, with strong contrast on mobile. */
  const r=o.r;
- g.save();g.beginPath();g.ellipse(0,0,r*1.37,r*.68,0,0,Math.PI*2);g.clip();
+ g.save();g.beginPath();g.ellipse(0,0,r*1.25,r*.59,0,0,Math.PI*2);g.clip();
  const cy=g.createRadialGradient(-r*.38,-r*.22,r*.08,0,0,r*1.5);
  cy.addColorStop(0,cytosolColor(o,"#f19caf"));cy.addColorStop(.65,cytosolColor(o,"#dc6888"));cy.addColorStop(1,cytosolColor(o,"#a63c64"));
  g.fillStyle=cy;g.fillRect(-r*1.5,-r,r*3,r*2);
