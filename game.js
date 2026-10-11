@@ -484,7 +484,7 @@ else if(sp==="rotifer"){
  }
  /* Retractile foot and two tiny toes. */
  g.strokeStyle="rgba(245,255,234,.78)";g.lineWidth=Math.max(.9,r*.05);
- for(const side of [-1,1]){g.beginPath();g.moveTo(-r*1.56,flex+side*r*.06);g.lineTo(-r*1.80,flex+side*r*.17);g.stroke()}
+ for(const side of [-1,1]){g.beginPath();g.moveTo(-r*1.60,flex+(side===1?r*.105:0));g.quadraticCurveTo(-r*1.69,flex+side*r*.12,-r*1.80,flex+side*r*.17);g.stroke()}
 }
 else if(sp==="tardigrade"){g.strokeStyle="rgba(235,220,205,.72)";g.lineWidth=3;for(let z=0;z<4;z++){const x=(-.7+z*.46)*o.r;for(const side of [-1,1]){const y=side*o.r*.58;g.beginPath();g.moveTo(x,y*.72);g.quadraticCurveTo(x-o.r*.08,y,x+Math.sin(t*4+z)*o.r*.06,y*1.2);g.stroke()}}}
 g.restore()}
