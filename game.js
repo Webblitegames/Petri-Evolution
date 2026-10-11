@@ -379,8 +379,30 @@ else if(sp==="stentor"){
  /* Stentor's blue-green cytoplasm, beaded macronucleus, and oral spiral. */
  g.save();g.beginPath();const sw=Math.sin(st*3.1)*.10;g.moveTo(r*1.17,-r*.82);g.bezierCurveTo(r*.62,-r*.69,r*.12,-r*.28+bend,-r*.22,-r*.20+bend);g.bezierCurveTo(-r*.63,-r*.14+bend,-r*.92+tail,-r*.10+tail*.7,-r*1.2+tail,tail);g.bezierCurveTo(-r*.89,r*.11+tail*.7,-r*.52,r*.16+bend,-r*.20,r*.22+bend);g.bezierCurveTo(r*.18,r*.31+bend,r*.67,r*(.70+sw),r*1.17,r*.82);g.quadraticCurveTo(r*1.35,r*.05,r*1.17,-r*.82);g.closePath();g.clip();
  const cyt=g.createLinearGradient(-r,0,r,0);cyt.addColorStop(0,"rgba(31,144,157,.55)");cyt.addColorStop(.7,"rgba(33,179,183,.58)");cyt.addColorStop(1,"rgba(13,73,119,.8)");g.fillStyle=cyt;g.fillRect(-r*1.4,-r,r*3,r*2);
- for(let i=0;i<6;i++){const f=i/5,x=(-.77+i*.26)*r+tail*Math.pow(1-f,2)*.48,y=Math.sin(i*.8+ph*.4)*r*.025+bend*(1-f)*.75+tail*(1-f)*.26;g.beginPath();g.arc(x,y,r*(.085+i*.007),0,7);g.fillStyle="#6646a9";g.fill();g.strokeStyle="rgba(222,197,255,.8)";g.lineWidth=.8;g.stroke()}
- for(let i=0;i<13;i++){const f=i/12,x=(-.86+i*.17)*r+tail*Math.pow(1-f,2)*.48,y=Math.sin(i*1.7+ph)*r*.06+bend*(1-f)*.75+tail*(1-f)*.26;g.fillStyle="rgba(152,255,235,.45)";g.beginPath();g.arc(x,y,r*(.018+(i%3)*.009),0,7);g.fill()}
+ /* Organelle positions are attached to a flexible body centerline, not a rigid row. */
+ const centerAt=f=>{
+  const u=1-f;
+  return {x:(-.83+f*1.57)*r+tail*u*u*.55,
+          y:tail*u*u*.78+bend*4*f*u+Math.sin(st*2.8-f*2.4)*r*.055*u};
+ };
+ const nucleus=[];
+ for(let i=0;i<6;i++){
+  const f=(i+.25)/6,pt=centerAt(f),ahead=centerAt(Math.min(1,f+.035)),behind=centerAt(Math.max(0,f-.035));
+  const angle=Math.atan2(ahead.y-behind.y,ahead.x-behind.x);
+  const pulse=1+.09*Math.sin(st*3.6-i*.7);
+  nucleus.push(pt);
+  g.save();g.translate(pt.x,pt.y);g.rotate(angle);
+  g.beginPath();g.ellipse(0,0,r*(.095+i*.005)*pulse,r*.09/pulse,0,0,7);
+  g.fillStyle="#6646a9";g.fill();g.strokeStyle="rgba(222,197,255,.8)";g.lineWidth=.8;g.stroke();g.restore();
+ }
+ /* Fine strands flex between the nucleus beads, reinforcing the living chain. */
+ g.beginPath();nucleus.forEach((pt,i)=>i?g.lineTo(pt.x,pt.y):g.moveTo(pt.x,pt.y));
+ g.strokeStyle="rgba(121,73,168,.55)";g.lineWidth=Math.max(.7,r*.038);g.stroke();
+ for(let i=0;i<13;i++){
+  const f=(i+.4)/13,pt=centerAt(f),offset=Math.sin(i*2.3+st*2.1)*r*(.055+.06*f);
+  const x=pt.x,y=pt.y+offset;
+  g.fillStyle="rgba(152,255,235,.55)";g.beginPath();g.arc(x,y,r*(.018+(i%3)*.009),0,7);g.fill();
+ }
  g.restore();
  /* The mouth is an elliptical funnel at the wide end, with a circulating food current. */
  g.save();g.translate(r*.97,0);g.scale(.34,.80);
