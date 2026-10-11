@@ -469,14 +469,15 @@ else if(sp==="rotifer"){
   g.fillStyle="rgba(204,252,235,.22)";g.strokeStyle="rgba(224,255,244,.86)";g.lineWidth=Math.max(.8,r*.045);
   g.beginPath();g.ellipse(cx,cy,r*.30,r*.27,side*.18,0,7);g.fill();g.stroke();
   for(let i=0;i<24;i++){
-   const a=i/24*Math.PI*2,phase=spin-i*.75+side*1.3;
-   const sweep=Math.sin(phase)*.38,fold=.74+.26*Math.cos(phase);
+   const a=i/24*Math.PI*2;
+   // Opposing metachronal waves: each crown sweeps water toward the mouth gap.
+   const phase=spin-side*i*.75+side*1.3;
+   const power=.62+.38*Math.sin(phase);
    const px=cx+Math.cos(a)*r*.28,py=cy+Math.sin(a)*r*.25;
-   const dir=a+sweep;
+   const inward=-side,dx=Math.cos(a)*r*.075,dy=inward*r*(.12+.16*power);
    g.beginPath();g.moveTo(px,py);
-   g.quadraticCurveTo(px+Math.cos(dir)*r*.13,py+Math.sin(dir)*r*.12,
-     px+Math.cos(dir+.16*Math.sin(phase))*r*.24*fold,
-     py+Math.sin(dir+.16*Math.sin(phase))*r*.23*fold);
+   g.quadraticCurveTo(px+dx*.8,py+dy*.45,
+     px+dx+Math.sin(phase)*r*.025,py+dy);
    g.stroke();
   }
  }
