@@ -469,7 +469,7 @@ else if(sp==="rotifer"){
   g.fillStyle="rgba(204,252,235,.22)";g.strokeStyle="rgba(224,255,244,.86)";g.lineWidth=Math.max(.8,r*.045);
   g.beginPath();g.ellipse(cx,cy,r*.30,r*.27,side*.18,0,7);g.fill();g.stroke();
   for(let i=0;i<24;i++){
-   const a=i/24*Math.PI*2,phase=spin-(side===1?-i:i)*.75+side*1.3;
+   const a=i/24*Math.PI*2,phase=spin-(side===1?(24-i):i)*.75-1.3;
    const sweep=Math.sin(phase)*.38,fold=.74+.26*Math.cos(phase);
    const px=cx+Math.cos(a)*r*.28,py=cy+Math.sin(a)*r*.25;
    const dir=a+sweep;
