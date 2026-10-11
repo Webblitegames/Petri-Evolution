@@ -342,7 +342,7 @@ else if(shape===3){g.ellipse(o.x,o.y,o.r*1.12,o.r*.9,a0,0,Math.PI*2)}
 else if(shape===4){/* Euglena: flexible spindle-shaped cell. */g.save();g.translate(o.x,o.y);g.rotate(a0);g.moveTo(o.r*1.48,0);g.bezierCurveTo(o.r*.72,-o.r*.56,-o.r*.62,-o.r*.54,-o.r*1.18,-o.r*.12);g.quadraticCurveTo(-o.r*1.3,0,-o.r*1.18,o.r*.12);g.bezierCurveTo(-o.r*.62,o.r*.54,o.r*.72,o.r*.56,o.r*1.48,0);g.restore()}
 else if(shape===5){/* Stentor: flexible trumpet with a wide oral rim and tapering foot. */g.save();g.translate(o.x,o.y);g.rotate(a0);const r=o.r,sw=Math.sin(t*3.1)*.10,tip=Math.sin(t*2.8)*r*.34,mid=Math.sin(t*2.8-1.0)*r*.25;g.moveTo(r*1.17,-r*.82);g.bezierCurveTo(r*.62,-r*.69,r*.12,-r*.28+mid,-r*.22,-r*.20+mid);g.bezierCurveTo(-r*.63,-r*.14+mid,-r*.92+tip,-r*.10+tip*.7,-r*1.2+tip,tip);g.bezierCurveTo(-r*.89,r*.11+tip*.7,-r*.52,r*.16+mid,-r*.20,r*.22+mid);g.bezierCurveTo(r*.18,r*.31+mid,r*.67,r*(.70+sw),r*1.17,r*.82);g.quadraticCurveTo(r*1.35,r*.05,r*1.17,-r*.82);g.closePath();g.restore()}
 else if(shape===6){/* Didinium: continuous rounded barrel tapering into its feeding cone. */g.save();g.translate(o.x,o.y);g.rotate(a0);const r=o.r,flex=Math.sin(t*3.2)*r*.035;g.moveTo(-r*1.08,0);g.bezierCurveTo(-r*1.06,-r*.58,-r*.56,-r*.91,r*.05,-r*.87);g.bezierCurveTo(r*.50,-r*.84,r*.76,-r*.57,r*.84,-r*.31);g.bezierCurveTo(r*.98,-r*.23,r*1.18,-r*.12,r*1.40,flex);g.bezierCurveTo(r*1.18,r*.12,r*.98,r*.23,r*.84,r*.31);g.bezierCurveTo(r*.76,r*.57,r*.50,r*.84,r*.05,r*.87);g.bezierCurveTo(-r*.56,r*.91,-r*1.06,r*.58,-r*1.08,0);g.closePath();g.restore()}
-else if(shape===7){/* Rotifer: elongated microscopic animal with head corona and tapering foot. */g.save();g.translate(o.x,o.y);g.rotate(a0);g.ellipse(0,0,o.r*1.35,o.r*.58,0,0,Math.PI*2);g.moveTo(-o.r*1.15,-o.r*.22);g.lineTo(-o.r*1.72,0);g.lineTo(-o.r*1.15,o.r*.22);g.closePath();g.restore()}
+else if(shape===7){/* Rotifer: flexible transparent trunk, narrowed neck and telescoping foot. */g.save();g.translate(o.x,o.y);g.rotate(a0);const r=o.r,flex=Math.sin(t*3.1)*r*.09;g.moveTo(r*1.04,-r*.36);g.bezierCurveTo(r*.69,-r*.37,r*.61,-r*.68,r*.13,-r*.70);g.bezierCurveTo(-r*.42,-r*.78,-r*.99,-r*.52,-r*1.05,-r*.18);g.bezierCurveTo(-r*1.13,-r*.11,-r*1.34,-r*.11+flex,-r*1.56,flex);g.lineTo(-r*1.61,r*.11+flex);g.bezierCurveTo(-r*1.36,r*.13+flex,-r*1.14,r*.13,-r*1.05,r*.18);g.bezierCurveTo(-r*.99,r*.52,-r*.42,r*.78,r*.13,r*.70);g.bezierCurveTo(r*.61,r*.68,r*.69,r*.37,r*1.04,r*.36);g.quadraticCurveTo(r*1.16,0,r*1.04,-r*.36);g.closePath();g.restore()}
 else if(shape===8){/* Tardigrade: plump segmented body; legs are drawn as appendages below. */g.save();g.translate(o.x,o.y);g.rotate(a0);g.ellipse(0,0,o.r*1.42,o.r*.72,0,0,Math.PI*2);g.restore()}
 else{const n=24;for(let i=0;i<=n;i++){const a=i/n*Math.PI*2,rr=o.r*(1+.025*Math.sin(a*5+t*2)+.018*Math.sin(a*8-t*1.3));const x=o.x+Math.cos(a)*rr,y=o.y+Math.sin(a)*rr;i?g.lineTo(x,y):g.moveTo(x,y)}g.closePath()}}
 function mixHex(a,b,t){t=Math.max(0,Math.min(1,t||0));const A=parseInt(a.slice(1),16),B=parseInt(b.slice(1),16),ar=A>>16,ag=A>>8&255,ab=A&255,br=B>>16,bg=B>>8&255,bb=B&255;return "#"+[ar+(br-ar)*t,ag+(bg-ag)*t,ab+(bb-ab)*t].map(v=>Math.round(v).toString(16).padStart(2,"0")).join("")}
@@ -448,7 +448,26 @@ else if(sp==="didinium"){
  g.strokeStyle="rgba(255,221,234,.60)";g.lineWidth=Math.max(.8,r*.045);
  g.beginPath();g.moveTo(r*.73,-r*.35);g.quadraticCurveTo(r*.85,0,r*.73,r*.35);g.stroke();
 }
-else if(sp==="rotifer"){g.strokeStyle="rgba(240,255,230,.72)";g.lineWidth=1;for(const side of [-1,1]){g.beginPath();g.arc(o.r*1.18,side*o.r*.22,o.r*.3,t*5,t*5+Math.PI*1.45);g.stroke()}for(let i=0;i<12;i++){const q=i/12*Math.PI*2;g.beginPath();g.moveTo(o.r*1.18+Math.cos(q)*o.r*.28,Math.sin(q)*o.r*.34);g.lineTo(o.r*1.18+Math.cos(q+t*6)*o.r*.39,Math.sin(q+t*6)*o.r*.44);g.stroke()}}
+else if(sp==="rotifer"){
+ const r=o.r,spin=t*11+(o.phase||0),flex=Math.sin(t*3.1)*r*.09;
+ /* Semi-transparent trunk reveals mastax, digestive tract and paired vacuoles. */
+ g.save();g.beginPath();g.ellipse(-r*.20,0,r*.79,r*.53,0,0,7);g.clip();
+ g.fillStyle="rgba(235,255,230,.18)";g.fillRect(-r,-r*.6,r*1.85,r*1.2);
+ g.strokeStyle="rgba(246,226,179,.68)";g.lineWidth=Math.max(1,r*.11);g.beginPath();g.moveTo(r*.55,0);g.bezierCurveTo(r*.13,-r*.25,-r*.21,r*.32,-r*.60,r*.06);g.stroke();
+ g.fillStyle="rgba(139,69,104,.72)";g.beginPath();g.ellipse(-r*.39,r*.10,r*.26,r*.21,.3,0,7);g.fill();
+ g.fillStyle="rgba(250,221,145,.73)";for(const [x,y,s] of [[.30,-.19,.13],[-.70,-.24,.12],[-.05,.33,.10]]){g.beginPath();g.arc(x*r,y*r,s*r,0,7);g.fill()}
+ g.restore();
+ /* Two beating ciliary crowns at the head, drawn as a paired wheel corona. */
+ for(const side of [-1,1]){
+  const cx=r*1.17,cy=side*r*.29;
+  g.fillStyle="rgba(204,252,235,.22)";g.strokeStyle="rgba(224,255,244,.86)";g.lineWidth=Math.max(.8,r*.045);
+  g.beginPath();g.ellipse(cx,cy,r*.30,r*.27,side*.18,0,7);g.fill();g.stroke();
+  for(let i=0;i<19;i++){const a=i/19*Math.PI*2,sw=Math.sin(spin+i*.72+side)*.10,px=cx+Math.cos(a)*r*.28,py=cy+Math.sin(a)*r*.25;g.beginPath();g.moveTo(px,py);g.quadraticCurveTo(px+Math.cos(a+sw)*r*.12,py+Math.sin(a+sw)*r*.12,px+Math.cos(a+sw)*r*.23,py+Math.sin(a+sw)*r*.22);g.stroke()}
+ }
+ /* Retractile foot and two tiny toes. */
+ g.strokeStyle="rgba(245,255,234,.78)";g.lineWidth=Math.max(.9,r*.05);
+ for(const side of [-1,1]){g.beginPath();g.moveTo(-r*1.56,flex+side*r*.06);g.lineTo(-r*1.80,flex+side*r*.17);g.stroke()}
+}
 else if(sp==="tardigrade"){g.strokeStyle="rgba(235,220,205,.72)";g.lineWidth=3;for(let z=0;z<4;z++){const x=(-.7+z*.46)*o.r;for(const side of [-1,1]){const y=side*o.r*.58;g.beginPath();g.moveTo(x,y*.72);g.quadraticCurveTo(x-o.r*.08,y,x+Math.sin(t*4+z)*o.r*.06,y*1.2);g.stroke()}}}
 g.restore()}
 function circle(o,color){g.beginPath();g.arc(o.x,o.y,o.r,0,Math.PI*2);g.fillStyle=color;g.fill()}
