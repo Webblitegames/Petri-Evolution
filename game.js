@@ -449,7 +449,13 @@ else if(sp==="didinium"){
  g.beginPath();g.moveTo(r*.73,-r*.35);g.quadraticCurveTo(r*.85,0,r*.73,r*.35);g.stroke();
 }
 else if(sp==="rotifer"){
- const r=o.r,spin=t*11+(o.phase||0),flex=Math.sin(t*3.1)*r*.09;
+ const r=o.r,flex=Math.sin(t*3.1)*r*.09;
+ // Codex specimens are stationary: retain a slow feeding beat there.
+ // Moving bosses increase beat frequency as they actively pursue the player.
+ const motion=Math.hypot(o.vx||o.mvx||0,o.vy||o.mvy||0);
+ const active=!o.gallery&&motion>.12;
+ const beatRate=active?18:8;
+ const spin=t*beatRate+(o.phase||0);
  /* Semi-transparent trunk reveals mastax, digestive tract and paired vacuoles. */
  g.save();g.beginPath();g.ellipse(-r*.20,0,r*.79,r*.53,0,0,7);g.clip();
  g.fillStyle="rgba(235,255,230,.18)";g.fillRect(-r,-r*.6,r*1.85,r*1.2);
@@ -462,7 +468,17 @@ else if(sp==="rotifer"){
   const cx=r*1.17,cy=side*r*.29;
   g.fillStyle="rgba(204,252,235,.22)";g.strokeStyle="rgba(224,255,244,.86)";g.lineWidth=Math.max(.8,r*.045);
   g.beginPath();g.ellipse(cx,cy,r*.30,r*.27,side*.18,0,7);g.fill();g.stroke();
-  for(let i=0;i<19;i++){const a=i/19*Math.PI*2,sw=Math.sin(spin+i*.72+side)*.10,px=cx+Math.cos(a)*r*.28,py=cy+Math.sin(a)*r*.25;g.beginPath();g.moveTo(px,py);g.quadraticCurveTo(px+Math.cos(a+sw)*r*.12,py+Math.sin(a+sw)*r*.12,px+Math.cos(a+sw)*r*.23,py+Math.sin(a+sw)*r*.22);g.stroke()}
+  for(let i=0;i<24;i++){
+   const a=i/24*Math.PI*2,phase=spin-i*.75+side*1.3;
+   const sweep=Math.sin(phase)*.38,fold=.74+.26*Math.cos(phase);
+   const px=cx+Math.cos(a)*r*.28,py=cy+Math.sin(a)*r*.25;
+   const dir=a+sweep;
+   g.beginPath();g.moveTo(px,py);
+   g.quadraticCurveTo(px+Math.cos(dir)*r*.13,py+Math.sin(dir)*r*.12,
+     px+Math.cos(dir+.16*Math.sin(phase))*r*.24*fold,
+     py+Math.sin(dir+.16*Math.sin(phase))*r*.23*fold);
+   g.stroke();
+  }
  }
  /* Retractile foot and two tiny toes. */
  g.strokeStyle="rgba(245,255,234,.78)";g.lineWidth=Math.max(.9,r*.05);
