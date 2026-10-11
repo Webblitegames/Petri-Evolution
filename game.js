@@ -470,14 +470,13 @@ else if(sp==="rotifer"){
   g.beginPath();g.ellipse(cx,cy,r*.30,r*.27,side*.18,0,7);g.fill();g.stroke();
   for(let i=0;i<24;i++){
    const a=i/24*Math.PI*2,phase=spin-i*.75+side*1.3;
-   // Preserve the original traveling-wave motion; mirror only the right/lower crown.
    const sweep=Math.sin(phase)*.38,fold=.74+.26*Math.cos(phase);
    const px=cx+Math.cos(a)*r*.28,py=cy+Math.sin(a)*r*.25;
-   const dir=a+(side===1?-sweep:sweep);
+   const dir=a+sweep;
    g.beginPath();g.moveTo(px,py);
    g.quadraticCurveTo(px+Math.cos(dir)*r*.13,py+Math.sin(dir)*r*.12,
-     px+Math.cos(dir+(side===1?-1:1)*.16*Math.sin(phase))*r*.24*fold,
-     py+Math.sin(dir+(side===1?-1:1)*.16*Math.sin(phase))*r*.23*fold);
+     px+Math.cos(dir+.16*Math.sin(phase))*r*.24*fold,
+     py+Math.sin(dir+.16*Math.sin(phase))*r*.23*fold);
    g.stroke();
   }
  }
